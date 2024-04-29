@@ -1,0 +1,12 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "prettier.tabWidth": 4,
+  "prettier.useTabs": true,
+  "arrowParen": "singleline",
+  "bracketSpacing": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
+}
