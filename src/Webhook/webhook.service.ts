@@ -5,7 +5,7 @@ import axios from 'axios';
 import { WebhookDTO } from './Webhook.dto';
 import { catchError, firstValueFrom } from 'rxjs';
 import { MessageService } from 'src/message/message.service';
-import dotenv from "dotenv";
+import * as dotenv from 'dotenv'
 
 
 @Injectable()
