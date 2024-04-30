@@ -23,8 +23,7 @@ export class MessageService {
   async findAllFromWhatsAppBusiness() {
     console.log(`Sending message to ${this.recipient}`);
 
-    const response = await firstValueFrom(
-      this.httpService.post(
+    return this.httpService.post(
         'https://graph.facebook.com/v19.0/229189383622046/messages',
         {
           messaging_product: 'whatsapp',
@@ -38,10 +37,7 @@ export class MessageService {
           },
         },
         this.request,
-      )
-    );
-
-    return response;
+      );
 
     //console.log('Response:', response.status);
   }
