@@ -41,7 +41,7 @@ export class MessageService {
       )
     );
 
-    console.log('Response:', response.status);
+    //console.log('Response:', response.status);
   }
 
   @Get('sendMessage')
