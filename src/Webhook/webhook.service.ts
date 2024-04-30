@@ -1,5 +1,5 @@
 // webhook.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Param } from '@nestjs/common';
 import { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 import { WebhookDTO } from './Webhook.dto';
@@ -23,7 +23,7 @@ export class WebhookService {
 
   
 
-  verifyWebhook(mode: string, verifyToken: string, challenge: string) {
+  verifyWebhook(@Param('mode') mode: string, @Param('verifyToken') verifyToken: string, @Param('challenge') challenge: string) {
     debugger;
     if (mode === "subscribe" && verifyToken === this.mytoken) {
       return challenge;
