@@ -1,15 +1,12 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpException,
   HttpStatus,
-  Param,
   Post,
-  Put,
+  Query,
 } from '@nestjs/common';
-import { AxiosError, AxiosResponse } from 'axios';
 import { WebhookDTO } from './Webhook.dto';
 import { WebhookService } from './webhook.service';
 
@@ -35,11 +32,11 @@ export class WebhookController {
   
 
   @Get()
-  async verify(mode: string, verifyToken: string, challenge: string){
-    return await this.webhookService
-      .verifyWebhook(mode, verifyToken, challenge)
-      //.then((axiosResponse: AxiosResponse) => axiosResponse.data)
-      //.catch((error: { message: string | Record<string, any>; }) => {
-        //throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  };
+  async verify(
+    @Query('mode') mode: string,
+    @Query('verifyToken') verifyToken: string,
+    @Query('challenge') challenge: string,
+  ) {
+    return await this.webhookService.verifyWebhook(mode, verifyToken, challenge);
+  }
 }
