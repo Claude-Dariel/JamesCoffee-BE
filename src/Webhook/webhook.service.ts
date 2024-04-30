@@ -38,6 +38,8 @@ export class WebhookService {
     
     const thisType = data.entry[0].changes[0].value.messages.type;
 
+    console.log(thisType)
+
     if(thisType === 'order'){
       console.log('The type is order');
     }
