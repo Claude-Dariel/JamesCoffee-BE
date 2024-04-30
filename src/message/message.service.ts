@@ -41,7 +41,7 @@ export class MessageService {
     )
     );
 
-    return response;
+    return (await response).data;
     //console.log('Response:', response.status);
   }
 
