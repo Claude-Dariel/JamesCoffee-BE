@@ -36,6 +36,6 @@ export class WebhookService {
   async handleWebhook(data: WebhookDTO): Promise<void> {
     console.log(JSON.stringify(data, null, 2));
     
-    this.messageService.findAllFromWhatsAppBusiness();
+    //this.messageService.findAllFromWhatsAppBusiness();
   }
 }
