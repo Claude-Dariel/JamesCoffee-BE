@@ -24,7 +24,6 @@ export class WebhookService {
   
 
   verifyWebhook(mode: string, verifyToken: string, challenge: string) {
-    debugger;
     if (mode === "subscribe" && verifyToken === this.mytoken) {
       return challenge;
     } else {
