@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Get, Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';
+import { response } from 'express';
 import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class MessageService {
     },
   };
   productService: any;
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) { }
 
   sendMessage() {
     this.httpService.post('');
@@ -23,22 +24,24 @@ export class MessageService {
   async findAllFromWhatsAppBusiness() {
     console.log(`Sending message to ${this.recipient}`);
 
-    return this.httpService.post(
-        'https://graph.facebook.com/v19.0/229189383622046/messages',
-        {
-          messaging_product: 'whatsapp',
-          to: this.recipient,
-          type: 'template',
-          template: {
-            name: 'hello_world',
-            language: {
-              code: 'en_US',
-            },
+    const response = firstValueFrom(this.httpService.post(
+      'https://graph.facebook.com/v19.0/229189383622046/messages',
+      {
+        messaging_product: 'whatsapp',
+        to: this.recipient,
+        type: 'template',
+        template: {
+          name: 'hello_world',
+          language: {
+            code: 'en_US',
           },
         },
-        this.request,
-      );
+      },
+      this.request,
+    )
+    );
 
+    return response;
     //console.log('Response:', response.status);
   }
 
