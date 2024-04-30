@@ -41,11 +41,10 @@ export class WebhookService {
     console.log(thisType)
 
     if(thisType === 'order'){
-      console.log('The type is order');
+      this.messageService.findAllFromWhatsAppBusiness();
     }
     else{
       console.log('The type is NOT order');
     }
-    //this.messageService.findAllFromWhatsAppBusiness();
   }
 }
