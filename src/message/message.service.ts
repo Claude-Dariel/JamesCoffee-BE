@@ -41,7 +41,7 @@ export class MessageService {
       )
     );
 
-    console.log('Response:', JSON.stringify(response, null, 2));
+    console.log('Response:', response.status);
   }
 
   @Get('sendMessage')
