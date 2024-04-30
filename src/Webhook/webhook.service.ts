@@ -6,6 +6,7 @@ import { WebhookDTO } from './Webhook.dto';
 import { catchError, firstValueFrom } from 'rxjs';
 import { MessageService } from 'src/message/message.service';
 import * as dotenv from 'dotenv';
+import { send } from 'process';
 
 @Injectable()
 export class WebhookService {
@@ -33,8 +34,15 @@ export class WebhookService {
   }
 
   async handleWebhook(data: WebhookDTO): Promise<void> {
-    console.log(JSON.stringify(data, null, 2));
+    const sender = data.entry[0].changes[0].value.messages.from;
+    const message = data.entry[0].changes[0].value.messages.text.body
+    console.log('Sender: ', sender)
+    console.log('Message: ', message)
 
-    this.messageService.findAllFromWhatsAppBusiness();
+    // console.log(JSON.stringify(data, null, 2));
+    if(sender === '27814956903'){
+      this.messageService.findAllFromWhatsAppBusiness();
+    }
+
   }
 }
