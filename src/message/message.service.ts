@@ -4,7 +4,7 @@ import { AxiosRequestConfig } from 'axios';
 
 @Injectable()
 export class MessageService {
-  private recipient = '27793387630';
+  private recipient = '27814956903';
   private request: AxiosRequestConfig = {
     headers: {
       'Content-Type': 'application/json',
