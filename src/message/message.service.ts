@@ -20,6 +20,7 @@ export class MessageService {
   }
 
   async findAllFromWhatsAppBusiness() {
+    console.log(`Sending message to ${this.recipient}`);
     return this.httpService.post(
       'https://graph.facebook.com/v19.0/229189383622046/messages',
       {
