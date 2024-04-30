@@ -43,15 +43,10 @@ export class WebhookController {
   }
 
   @Get()
-  async verify(
-    @Query('hub.mode') mode: string,
-    @Query('hub.verify_token') verifyToken: string,
-    @Query('hub.challenge') challenge: string,
-    @Res() res: Response,
-  ) {
-    if (mode && verifyToken) {
-      if (mode === "subscribe" && verifyToken === process.env.MYTOKEN) {
-        return res.status(HttpStatus.OK).send(challenge);
+  async verify(verifyToken: string, @Res() res: Response) {
+    if (verifyToken) {
+      if (verifyToken === process.env.MYTOKEN) {
+        return res.status(HttpStatus.OK).send("OK");
       } else {
         return res.status(HttpStatus.FORBIDDEN).send();
       }
