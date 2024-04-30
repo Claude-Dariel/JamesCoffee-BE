@@ -36,7 +36,7 @@ export class WebhookService {
   async handleWebhook(data: WebhookDTO): Promise<void> {
     console.log(JSON.stringify(data, null, 2));
     
-    const thisType = data.entry[0].changes[0].value.messages.type;
+    const thisType = data.entry[0].changes[0].value.messages[0].type;
 
     console.log(thisType)
 
