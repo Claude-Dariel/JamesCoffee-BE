@@ -33,7 +33,7 @@ export class WebhookController {
   @Get()
   async verifyToken(
     @Query('hub.mode') mode: string,
-    @Query('hub.verifyToken') verifyToken: string,
+    @Query('hub.verify_token') verifyToken: string,
     @Query('hub.challenge') challenge: string,
   ) {
     console.log(mode);
