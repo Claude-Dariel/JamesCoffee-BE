@@ -41,6 +41,8 @@ export class MessageService {
       )
     );
 
+    return response;
+
     //console.log('Response:', response.status);
   }
 
