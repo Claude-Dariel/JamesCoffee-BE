@@ -9,6 +9,7 @@ export interface WebhookDTO {
             text: {
               body: string;
             };
+            type: string;
           };
           metadata: {
             phone_number_id: string;
