@@ -34,15 +34,8 @@ export class WebhookService {
   }
 
   async handleWebhook(data: WebhookDTO): Promise<void> {
-    const sender = data.entry[0].changes[0].value.messages.from;
-    const message = data.entry[0].changes[0].value.messages.text.body
-    console.log('Sender: ', sender)
-    console.log('Message: ', message)
-
-    // console.log(JSON.stringify(data, null, 2));
-    if(sender === '27814956903'){
-      this.messageService.findAllFromWhatsAppBusiness();
-    }
-
+    console.log(JSON.stringify(data, null, 2));
+    
+    this.messageService.findAllFromWhatsAppBusiness();
   }
 }
