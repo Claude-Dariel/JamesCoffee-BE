@@ -20,7 +20,6 @@ interface FaceBookResponse {
 export class WebhookController {
   constructor(private webhookService: WebhookService) {}
 
-
   @Post()
   async get(@Body() requestData: WebhookDTO) {
     return await this.webhookService
@@ -31,22 +30,24 @@ export class WebhookController {
       });
   }
 
-  
-
   @Get()
   async verifyToken(
     @Query('mode') mode: string,
     @Query('verifyToken') verifyToken: string,
     @Query('challenge') challenge: string,
   ) {
-    return await this.webhookService.verifyWebhook(mode, verifyToken, challenge);
+    return await this.webhookService.verifyWebhook(
+      mode,
+      verifyToken,
+      challenge,
+    );
   }
 
-  @Get()
+  @Get('save')
   async verify(verifyToken: string, @Res() res: Response) {
     if (verifyToken) {
       if (verifyToken === process.env.MYTOKEN) {
-        return res.status(HttpStatus.OK).send("OK");
+        return res.status(HttpStatus.OK).send('OK');
       } else {
         return res.status(HttpStatus.FORBIDDEN).send();
       }
