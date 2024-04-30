@@ -36,6 +36,10 @@ export class WebhookController {
     @Query('verifyToken') verifyToken: string,
     @Query('challenge') challenge: string,
   ) {
+    console.log(mode);
+    console.log(verifyToken);
+    console.log(challenge);
+
     return await this.webhookService.verifyWebhook(
       mode,
       verifyToken,
