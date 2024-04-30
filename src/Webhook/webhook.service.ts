@@ -23,7 +23,7 @@ export class WebhookService {
 
   
 
-  verifyWebhook(@Param('mode') mode: string, @Param('verifyToken') verifyToken: string, @Param('challenge') challenge: string) {
+  verifyWebhook(mode: string, verifyToken: string, challenge: string) {
     if (mode === "subscribe" && verifyToken === this.mytoken) {
       return challenge;
     } else {
