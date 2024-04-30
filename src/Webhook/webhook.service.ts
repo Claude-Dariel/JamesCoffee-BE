@@ -28,7 +28,7 @@ export class WebhookService {
     if (mode === "subscribe" && verifyToken === this.mytoken) {
       return challenge;
     } else {
-      throw new Error(`Invalid subscription verification ${mode} - ${verifyToken === this.mytoken}`);
+      throw new Error(`Invalid subscription verification mode: ${mode}, Verify Token: ${verifyToken} - My token: ${this.mytoken}`);
     }
   }
 
