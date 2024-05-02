@@ -1,1 +1,3 @@
-interface MessageDTO {}
+interface MessageDTO {
+    phone_number: string
+}
