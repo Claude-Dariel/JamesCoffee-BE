@@ -4,6 +4,12 @@ export interface WebhookDTO {
     entry: {
       changes: {
         value: {
+          contacts: {
+            profile: {
+              name: string;
+            };
+            wa_id: string;
+          }[];
           messages: {
             from: string;
             text: {

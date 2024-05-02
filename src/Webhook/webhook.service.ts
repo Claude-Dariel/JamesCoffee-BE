@@ -39,6 +39,7 @@ export class WebhookService {
     const thisType = data.entry[0].changes[0].value.messages[0].type;
 
     console.log(thisType)
+    console.log('Number associated with order: ', data.entry[0].changes[0].value.contacts[0].wa_id);
 
     if(thisType === 'order'){
       this.messageService.findAllFromWhatsAppBusiness();
