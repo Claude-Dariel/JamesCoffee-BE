@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class MessageService {
-  private recipient = '27814956903';
   private request: AxiosRequestConfig = {
     headers: {
       'Content-Type': 'application/json',
@@ -20,14 +19,14 @@ export class MessageService {
     this.httpService.post('');
   }
 
-  async findAllFromWhatsAppBusiness() {
-    console.log(`Sending message to ${this.recipient}`);
+  async findAllFromWhatsAppBusiness(phone_number: string) {
+    console.log(`Sending message to ${phone_number}`);
 
     const response = firstValueFrom(this.httpService.post(
       'https://graph.facebook.com/v19.0/229189383622046/messages',
       {
         messaging_product: 'whatsapp',
-        to: this.recipient,
+        to: phone_number,
         type: 'template',
         template: {
           name: 'hello_world',
