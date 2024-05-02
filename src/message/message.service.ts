@@ -1,8 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Get, Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';
-import { response } from 'express';
-import { catchError, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class MessageService {

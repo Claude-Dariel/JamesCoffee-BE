@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { HttpModule } from '@nestjs/axios';
+import { MessageController } from './message.controller';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { HttpModule } from '@nestjs/axios';
       }),
     }),
   ],
+  controllers: [MessageController],
   providers: [MessageService],
 })
 export class MessageModule {}
