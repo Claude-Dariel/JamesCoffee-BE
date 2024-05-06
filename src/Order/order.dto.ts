@@ -3,4 +3,5 @@ export interface OrderDto {
   price: string;
   phoneNumber: string;
   templateName: string;
+  customerResponse?: string;
 }

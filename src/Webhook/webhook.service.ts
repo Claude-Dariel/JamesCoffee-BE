@@ -52,14 +52,7 @@ export class WebhookService {
         templateName: 'order_confirmation' 
       };
 
-      this.orderService.handleOrder(order);
-
-      // const item_id = data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id;
-      // const price = data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price;
-      // console.log("Item ID:", item_id);
-      // console.log("Price:", price);
-      // const variables = [item_id, price]
-      // this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_confirmation', variables);
+      this.orderService.receiveOrder(order);
     }
     if(thisType === 'text'){
       const name = data.entry[0].changes[0].value.contacts[0].profile.name;
@@ -67,12 +60,20 @@ export class WebhookService {
       this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'welcome', variables);
     }
     if(thisType === 'button'){
+      const order: OrderDto = {
+        id: '',
+        price: '',
+        phoneNumber: phoneNumber,
+        templateName: ''
+      };
       const customerResponse = data.entry[0].changes[0].value.messages[0].button.text;
 
       if(customerResponse.toLowerCase() === 'confirm'){
+        this.orderService.acceptOrder(order);
         this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_accepted', []);
       }
       else if(customerResponse.toLowerCase() === 'cancel'){
+        this.orderService.cancelOrder(order);
         this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_cancelled', []);
       }
     }

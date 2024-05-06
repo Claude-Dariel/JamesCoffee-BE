@@ -20,7 +20,7 @@ export class OrderController {
   @Post()
   async get(@Body() requestData: OrderDto) {
     return await this.orderService
-      .handleOrder(requestData)
+      .receiveOrder(requestData)
       //.then((axiosResponse: AxiosResponse) => axiosResponse.data)
       .catch((error) => {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
