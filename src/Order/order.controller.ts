@@ -33,11 +33,14 @@ export class OrderController {
   @Get()
   async getAcceptedOrders() {
     try {
+      // Retrieve accepted orders from OrderService
+      const acceptedOrders: string[] = await this.orderService.getAcceptedOrdersAsync();
+      
       // Log accepted orders
-      console.log('Accepted orders after querying URL');
+      console.log('Accepted orders after querying URL: ', acceptedOrders);
 
-      // Return "Hello world"
-      return 'Hello world';
+      // Return the array of accepted orders
+      return acceptedOrders;
     } catch (error) {
       // Handle errors
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

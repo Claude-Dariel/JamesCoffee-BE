@@ -11,6 +11,9 @@ export class OrderService {
   constructor(private readonly httpService: HttpService, private messageService: MessageService) {}
   private acceptedOrders: OrderDto[] = [];
   private tentativeOrders: OrderDto[] = [];
+  private dummyOrders: string[] = [
+    "One", "Two", "Three"
+  ];
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
@@ -57,10 +60,10 @@ export class OrderService {
   }
 
   // Method to get accepted orders asynchronously
-  async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
+  async getAcceptedOrdersAsync(): Promise<string[]> {
     // Simulating an asynchronous operation, replace this with your actual logic
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating asynchronous delay
-    return this.acceptedOrders;
+    return this.dummyOrders;
   }
 
   // Method to get accepted orders synchronously
