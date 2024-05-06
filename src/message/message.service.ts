@@ -19,25 +19,57 @@ export class MessageService {
     this.httpService.post('');
   }
 
-  async findAllFromWhatsAppBusiness(phone_number: string, templateName: string) {
+  async findAllFromWhatsAppBusiness(phone_number: string, templateName: string, name: string, hasVariables: boolean) {
     console.log(`Sending message to ${phone_number}`);
 
-    const response = firstValueFrom(this.httpService.post(
-      'https://graph.facebook.com/v19.0/229189383622046/messages',
-      {
-        messaging_product: 'whatsapp',
-        to: phone_number,
-        type: 'template',
-        template: {
-          name: templateName,
-          language: {
-            code: 'en_US',
+    let response;
+
+    if(hasVariables){
+      response = firstValueFrom(this.httpService.post(
+        'https://graph.facebook.com/v19.0/229189383622046/messages',
+        {
+          messaging_product: 'whatsapp',
+          to: phone_number,
+          type: 'template',
+          template: {
+            name: templateName,
+            language: {
+              code: 'en_US',
+            },
+            "components": [
+              {
+                "type": "body",
+                "parameters": [
+                  {
+                    "type": 'text',
+                    "text": name
+                  }
+                ]
+              }]
           },
         },
-      },
-      this.request,
-    )
-    );
+        this.request,
+      )
+      );
+    }
+    else{
+      response = firstValueFrom(this.httpService.post(
+        'https://graph.facebook.com/v19.0/229189383622046/messages',
+        {
+          messaging_product: 'whatsapp',
+          to: phone_number,
+          type: 'template',
+          template: {
+            name: templateName,
+            language: {
+              code: 'en_US',
+            }
+          },
+        },
+        this.request,
+      )
+      );
+    }
 
     return (await response).data;
     //console.log('Response:', response.status);
