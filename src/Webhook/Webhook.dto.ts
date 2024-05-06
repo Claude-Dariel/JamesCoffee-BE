@@ -16,6 +16,12 @@ export interface WebhookDTO {
               body: string;
             };
             type: string;
+            order: {
+              product_items:{
+                product_retailer_id: string;
+                item_price: string;
+              }[];
+            };
           }[];
           metadata: {
             phone_number_id: string;

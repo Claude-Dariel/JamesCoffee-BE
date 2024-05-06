@@ -15,7 +15,7 @@ import { AxiosResponse } from 'axios';
     @Post()
     async get(@Body() requestData: MessageDTO) {
       return await this.messageService
-        .findAllFromWhatsAppBusiness(requestData.phone_number, requestData.templateName, requestData.name, requestData.hasVariables)
+        .findAllFromWhatsAppBusiness(requestData.phone_number, requestData.templateName, requestData.variables)
         .then((axiosResponse: AxiosResponse) => axiosResponse.data)
         .catch((error) => {
           throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

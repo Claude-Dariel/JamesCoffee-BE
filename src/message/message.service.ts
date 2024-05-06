@@ -19,10 +19,29 @@ export class MessageService {
     this.httpService.post('');
   }
 
-  async findAllFromWhatsAppBusiness(phone_number: string, templateName: string, name: string, hasVariables: boolean) {
+  async findAllFromWhatsAppBusiness(phone_number: string, templateName: string, variables: string[]) {
     console.log(`Sending message to ${phone_number}`);
 
     let response;
+    const hasVariables = variables.length !== 0;    
+    const components = [];
+
+    // Example loop to append objects to the components array
+    for (const variable of variables) {
+      // Assuming you have some logic here to create objects based on variables
+      const componentObject = {
+          type: 'body',
+          parameters: [
+              {
+                  type: 'text',
+                  text: variable
+              }
+          ]
+      };
+
+      // Push the created component object to the components array
+      components.push(componentObject);
+  }
 
     if(hasVariables){
       response = firstValueFrom(this.httpService.post(
@@ -36,16 +55,7 @@ export class MessageService {
             language: {
               code: 'en_US',
             },
-            "components": [
-              {
-                "type": "body",
-                "parameters": [
-                  {
-                    "type": 'text',
-                    "text": name
-                  }
-                ]
-              }]
+            "components": components
           },
         },
         this.request,

@@ -40,14 +40,18 @@ export class WebhookService {
 
     console.log(thisType);
     const phoneNumber = data.entry[0].changes[0].value.contacts[0].wa_id;
-    const name = data.entry[0].changes[0].value.contacts[0].profile.name;
     console.log('Number associated with order: ', phoneNumber);
 
     if(thisType === 'order'){
-      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'hello_world', 'N/A', false);
+      const item_id = data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id;
+      const price = data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price;
+      const variables = [item_id, price]
+      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_confirmation', variables);
     }
     if(thisType === 'text'){
-      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'welcome', name, true);
+      const name = data.entry[0].changes[0].value.contacts[0].profile.name;
+      const variables = [name];
+      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'welcome', variables);
     }
   }
 }
