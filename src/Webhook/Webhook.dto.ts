@@ -22,6 +22,9 @@ export interface WebhookDTO {
                 item_price: string;
               }[];
             };
+            button: {
+              text: string;
+            }
           }[];
           metadata: {
             phone_number_id: string;

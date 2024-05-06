@@ -55,5 +55,15 @@ export class WebhookService {
       const variables = [name];
       this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'welcome', variables);
     }
+    if(thisType === 'button'){
+      const customerResponse = data.entry[0].changes[0].value.messages[0].button.text;
+
+      if(customerResponse.toLowerCase() === 'confirm'){
+        this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_accepted', []);
+      }
+      else if(customerResponse.toLowerCase() === 'cancel'){
+        this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_cancelled', []);
+      }
+    }
   }
 }
