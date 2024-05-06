@@ -26,6 +26,9 @@ export class MessageService {
     const hasVariables = variables.length !== 0;    
     const params = [];
 
+    console.log('Has variables? ', hasVariables);
+    console.log('Template name: ', templateName);
+
     for (const variable of variables) {
         const parameterObject = {
             type: 'text',
