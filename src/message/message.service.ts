@@ -38,6 +38,12 @@ export class MessageService {
     console.log(JSON.stringify(params, null, 2));
 
     if(hasVariables){
+      const component = [];
+      const componentObj = {
+          type: 'body',
+          parameters: params
+      };
+      component.push(componentObj);
       response = firstValueFrom(this.httpService.post(
         'https://graph.facebook.com/v19.0/229189383622046/messages',
         {
@@ -49,10 +55,7 @@ export class MessageService {
             language: {
               code: 'en_US',
             },
-            "components": {
-                type: 'body',
-                parameters: params
-            }
+            "components": component
           },
         },
         this.request,
