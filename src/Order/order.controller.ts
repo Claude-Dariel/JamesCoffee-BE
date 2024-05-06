@@ -1,10 +1,12 @@
 import {
   Body, Controller, Param, Post, HttpException,
-  HttpStatus, Get
+  HttpStatus, Get,
+  Res
 } from '@nestjs/common';
 import { ProductDTO } from './../Product/Product.dto';
 import { OrderService } from './order.service';
 import { OrderDto } from './order.dto';
+import { Response } from 'express';
 
 @Controller('orders')
 export class OrderController {
@@ -28,7 +30,10 @@ export class OrderController {
   }
 
   @Get()
-  getAcceptedOrders() {
-    return this.orderService.getAcceptedOrders();
+  getAcceptedOrders(@Res() res: Response) {
+    const acceptedOrders = this.orderService.getAcceptedOrders();
+    // Sending the acceptedOrders array as a response
+    res.json(acceptedOrders);
   }
+
 }
