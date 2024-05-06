@@ -32,6 +32,7 @@ export class OrderController {
   @Get()
   getAcceptedOrders(@Res() res: Response) {
     const acceptedOrders = this.orderService.getAcceptedOrders();
+    console.log('Accepted orders on the server: ', acceptedOrders)
     // Sending the acceptedOrders array as a response
     res.json(acceptedOrders);
   }
