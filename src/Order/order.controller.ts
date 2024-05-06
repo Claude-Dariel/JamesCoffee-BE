@@ -7,6 +7,7 @@ import { ProductDTO } from './../Product/Product.dto';
 import { OrderService } from './order.service';
 import { OrderDto } from './order.dto';
 import { Response } from 'express';
+import { AxiosError, AxiosResponse } from 'axios';
 
 @Controller('orders')
 export class OrderController {
@@ -30,11 +31,12 @@ export class OrderController {
   }
 
   @Get()
-  getAcceptedOrders(@Res() res: Response) {
-    const acceptedOrders = this.orderService.getAcceptedOrders();
-    console.log('Accepted orders on the server: ', acceptedOrders)
-    // Sending the acceptedOrders array as a response
-    res.json(acceptedOrders);
+  async getAcceptedOrders() {
+    try {
+      const acceptedOrders: OrderDto[] = this.orderService.getAcceptedOrders();
+      return acceptedOrders;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
-
 }
