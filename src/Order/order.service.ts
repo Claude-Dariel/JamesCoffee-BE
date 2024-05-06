@@ -32,8 +32,8 @@ export class OrderService {
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [data.id, data.price]);
     this.tentativeOrders.push(data);
     console.log('After receiving orders: ')
-    console.log('Accepted orders: ', console.log(JSON.stringify(this.acceptedOrders, null, 2)));
-    console.log('Tentative orders: ', console.log(JSON.stringify(this.tentativeOrders, null, 2)));    
+    console.log('Accepted orders: ', console.log(this.acceptedOrders));
+    console.log('Tentative orders: ', console.log(this.tentativeOrders));    
   }
 
   async acceptOrder(data: OrderDto){
@@ -45,14 +45,14 @@ export class OrderService {
           console.log('Order not found in tentative orders');
       }
       console.log('After accepting orders: ')
-      console.log('Accepted orders: ', console.log(JSON.stringify(this.acceptedOrders, null, 2)));
-      console.log('Tentative orders: ', console.log(JSON.stringify(this.tentativeOrders, null, 2)));
+      console.log('Accepted orders: ', console.log(this.acceptedOrders));
+      console.log('Tentative orders: ', console.log(this.tentativeOrders));    
   }
 
   async cancelOrder(data: OrderDto){
     this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
     console.log('After cancelling orders: ')
-    console.log('Accepted orders: ', console.log(JSON.stringify(this.acceptedOrders, null, 2)));
-    console.log('Tentative orders: ', console.log(JSON.stringify(this.tentativeOrders, null, 2)));
+    console.log('Accepted orders: ', console.log(this.acceptedOrders));
+    console.log('Tentative orders: ', console.log(this.tentativeOrders));    
   }
 }
