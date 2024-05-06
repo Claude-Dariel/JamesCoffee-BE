@@ -34,6 +34,7 @@ export class OrderController {
   async getAcceptedOrders() {
     try {
       const acceptedOrders: OrderDto[] = this.orderService.getAcceptedOrders();
+      console.log('Accepted orders being sent to URL: ', acceptedOrders)
       return acceptedOrders;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
