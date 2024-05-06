@@ -27,9 +27,9 @@ export class MessageService {
       {
         messaging_product: 'whatsapp',
         to: phone_number,
-        type: templateName,
+        type: 'template',
         template: {
-          name: 'hello_world',
+          name: templateName,
           language: {
             code: 'en_US',
           },
