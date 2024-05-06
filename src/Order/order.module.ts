@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { HttpModule } from '@nestjs/axios';
+import { MessageService } from 'src/message/message.service';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { HttpModule } from '@nestjs/axios';
     }),
   ],
   controllers: [OrderController],
-  providers: [OrderService],
+  providers: [OrderService, MessageService],
 })
 export class OrderModule {}

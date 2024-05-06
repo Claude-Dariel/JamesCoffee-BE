@@ -4,6 +4,9 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { WebhookService } from './webhook.service';
 import { MessageService } from 'src/message/message.service';
+import { OrderDto } from '../Order/order.dto';
+import { OrderService } from 'src/Order/order.service';
+
 
 @Module({
   imports: [
@@ -21,6 +24,6 @@ import { MessageService } from 'src/message/message.service';
     }),
   ],
   controllers: [WebhookController],
-  providers: [WebhookService, MessageService],
+  providers: [WebhookService, MessageService, OrderService]
 })
 export class WebhookModule {}

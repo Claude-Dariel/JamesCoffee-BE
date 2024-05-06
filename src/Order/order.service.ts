@@ -3,10 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { ProductDTO } from 'src/Product/Product.dto';
+import { OrderDto } from './order.dto';
+import { MessageService } from 'src/message/message.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService, private messageService: MessageService) {}
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
@@ -22,5 +24,9 @@ export class OrderService {
           }),
         ),
     );
+  }
+
+  async handleOrder(data: OrderDto): Promise<void>{
+    this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [data.id, data.price]);
   }
 }

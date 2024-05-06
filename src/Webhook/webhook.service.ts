@@ -7,6 +7,8 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { MessageService } from 'src/message/message.service';
 import * as dotenv from 'dotenv';
 import { send } from 'process';
+import { OrderDto } from 'src/Order/order.dto';
+import { OrderService } from 'src/Order/order.service';
 
 @Injectable()
 export class WebhookService {
@@ -19,7 +21,7 @@ export class WebhookService {
   url: any;
   catalogId: any;
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService, private orderService: OrderService) {
     dotenv.config();
   }
 
@@ -43,12 +45,21 @@ export class WebhookService {
     console.log('Number associated with order: ', phoneNumber);
 
     if(thisType === 'order'){
-      const item_id = data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id;
-      const price = data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price;
-      console.log("Item ID:", item_id);
-      console.log("Price:", price);
-      const variables = [item_id, price]
-      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_confirmation', variables);
+      const order: OrderDto = {
+        id: data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id,
+        price: data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price,
+        phoneNumber: phoneNumber,
+        templateName: 'order_confirmation' 
+      };
+
+      this.orderService.handleOrder(order);
+
+      // const item_id = data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id;
+      // const price = data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price;
+      // console.log("Item ID:", item_id);
+      // console.log("Price:", price);
+      // const variables = [item_id, price]
+      // this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_confirmation', variables);
     }
     if(thisType === 'text'){
       const name = data.entry[0].changes[0].value.contacts[0].profile.name;
