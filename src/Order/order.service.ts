@@ -37,6 +37,9 @@ export class OrderService {
   }
 
   async acceptOrder(data: OrderDto){
+      console.log('Before accepting orders: ')
+      console.log('Accepted orders: ', this.acceptedOrders);
+      console.log('Tentative orders: ', this.tentativeOrders);
       const order = this.tentativeOrders.find(item => item.phoneNumber === data.phoneNumber);
       if (order) {
           this.acceptedOrders.push(order);
