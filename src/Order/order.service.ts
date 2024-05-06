@@ -56,6 +56,14 @@ export class OrderService {
     console.log('Tentative orders: ', this.tentativeOrders);    
   }
 
+  // Method to get accepted orders asynchronously
+  async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
+    // Simulating an asynchronous operation, replace this with your actual logic
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating asynchronous delay
+    return this.acceptedOrders;
+  }
+
+  // Method to get accepted orders synchronously
   getAcceptedOrders(): OrderDto[] {
     return this.acceptedOrders;
   }
