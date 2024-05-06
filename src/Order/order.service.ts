@@ -40,7 +40,7 @@ export class OrderService {
       const order = this.tentativeOrders.find(item => item.phoneNumber === data.phoneNumber);
       if (order) {
           this.acceptedOrders.push(order);
-          this.tentativeOrders = this.tentativeOrders.filter(item => item !== data);
+          this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
       } else {
           console.log('Order not found in tentative orders');
       }
