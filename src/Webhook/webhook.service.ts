@@ -43,10 +43,10 @@ export class WebhookService {
     console.log('Number associated with order: ', phoneNumber);
 
     if(thisType === 'order'){
-      this.messageService.findAllFromWhatsAppBusiness(phoneNumber);
+      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'hello_world');
     }
-    else{
-      console.log('The type is NOT order');
+    if(thisType === 'text'){
+      this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'welcome');
     }
   }
 }

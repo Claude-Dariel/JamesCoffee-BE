@@ -1,3 +1,4 @@
 interface MessageDTO {
-    phone_number: string
+    phone_number: string;
+    templateName: string;
 }

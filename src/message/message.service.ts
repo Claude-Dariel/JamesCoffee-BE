@@ -19,7 +19,7 @@ export class MessageService {
     this.httpService.post('');
   }
 
-  async findAllFromWhatsAppBusiness(phone_number: string) {
+  async findAllFromWhatsAppBusiness(phone_number: string, templateName: string) {
     console.log(`Sending message to ${phone_number}`);
 
     const response = firstValueFrom(this.httpService.post(
@@ -27,7 +27,7 @@ export class MessageService {
       {
         messaging_product: 'whatsapp',
         to: phone_number,
-        type: 'template',
+        type: 'templateName',
         template: {
           name: 'hello_world',
           language: {
