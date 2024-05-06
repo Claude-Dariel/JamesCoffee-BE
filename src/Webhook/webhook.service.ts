@@ -45,6 +45,8 @@ export class WebhookService {
     if(thisType === 'order'){
       const item_id = data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id;
       const price = data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price;
+      console.log("Item ID:", item_id);
+      console.log("Price:", price);
       const variables = [item_id, price]
       this.messageService.findAllFromWhatsAppBusiness(phoneNumber, 'order_confirmation', variables);
     }
