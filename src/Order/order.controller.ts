@@ -1,6 +1,6 @@
 import {
   Body, Controller, Param, Post, HttpException,
-  HttpStatus,
+  HttpStatus, Get
 } from '@nestjs/common';
 import { ProductDTO } from './../Product/Product.dto';
 import { OrderService } from './order.service';
@@ -25,5 +25,10 @@ export class OrderController {
       .catch((error) => {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       });
+  }
+
+  @Get()
+  getAcceptedOrders() {
+    return this.orderService.getAcceptedOrders();
   }
 }

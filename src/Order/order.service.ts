@@ -55,4 +55,8 @@ export class OrderService {
     console.log('Accepted orders: ', this.acceptedOrders);
     console.log('Tentative orders: ', this.tentativeOrders);    
   }
+
+  getAcceptedOrders(): OrderDto[] {
+    return this.acceptedOrders;
+  }
 }
