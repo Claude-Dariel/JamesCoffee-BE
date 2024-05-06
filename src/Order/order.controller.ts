@@ -35,7 +35,7 @@ export class OrderController {
     try {
       // Retrieve accepted orders from OrderService
       const acceptedOrders: OrderDto[] = await this.orderService.getAcceptedOrdersAsync();
-
+      console.log('Accepted orders being called by URL in OrderController: ', acceptedOrders);
       let id_array: string[] = [];
 
       for (const o of acceptedOrders) {

@@ -60,6 +60,7 @@ export class OrderService {
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
     // Simulating an asynchronous operation, replace this with your actual logic
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating asynchronous delay
+    console.log('Accepted orders being called by URL in OrderService: ', this.acceptedOrders);
     return this.acceptedOrders;
   }
 
