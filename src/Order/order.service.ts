@@ -61,11 +61,27 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    // Simulating an asynchronous operation, replace this with your actual logic
+    // Simulate an asynchronous operation
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating asynchronous delay
-    console.log('Accepted orders being called by URL in OrderService: ', this.acceptedOrders);
-    return this.acceptedOrders;
+    
+    // Return a promise that resolves with the acceptedOrders array
+    return new Promise(resolve => {
+      // Check if the acceptedOrders array is already populated
+      if (this.acceptedOrders.length > 0) {
+        // If it is, resolve the promise immediately with the acceptedOrders array
+        resolve(this.acceptedOrders);
+      } else {
+        // If not, wait for the array to be populated
+        const interval = setInterval(() => {
+          if (this.acceptedOrders.length > 0) {
+            clearInterval(interval); // Stop checking once the array is populated
+            resolve(this.acceptedOrders); // Resolve the promise with the acceptedOrders array
+          }
+        }, 100); // Check every 100 milliseconds
+      }
+    });
   }
+  
 
   // Method to get accepted orders synchronously
   getAcceptedOrders(): OrderDto[] {
