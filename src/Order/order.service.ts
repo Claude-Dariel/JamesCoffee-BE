@@ -40,6 +40,7 @@ export class OrderService {
     };
 
     const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
+    console.log('Requested product: ', requestedProduct);
     const productName = requestedProduct?.description ?? 'NO NAME';
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     this.tentativeOrders.push(data);
