@@ -29,6 +29,20 @@ export class OrderService {
           price: 40.00
         }
       ]
+    },
+    {
+      id: "27814956903",
+      price: "R60.00",
+      name: "Gerald Kirui",
+      phoneNumber: "27814956903",
+      templateName: '',
+      products: [
+        {
+          id: "2",
+          description: "Rooibos Latte",
+          price: 60.00
+        }
+      ]
     }
   ];
 
