@@ -47,18 +47,9 @@ export class OrderController {
     try {
       // Retrieve accepted orders from OrderService
       const acceptedOrders: OrderDto[] = await this.orderService.getAcceptedOrdersAsync();
-      console.log('Accepted orders being called by URL in OrderController: ', acceptedOrders);
-      let id_array: string[] = [];
-
-      for (const o of acceptedOrders) {
-        id_array.push(o.id);
-    }
-      
-      // Log accepted orders
-      console.log('Accepted orders after querying URL: ', id_array);
-
+      console.log('Accepted orders being called by URL in OrderController: ', acceptedOrders);      
       // Return the array of accepted orders
-      return id_array;
+      return acceptedOrders;
     } catch (error) {
       // Handle errors
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
