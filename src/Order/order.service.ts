@@ -6,11 +6,10 @@ import { ProductDTO } from 'src/Product/Product.dto';
 import { OrderDto } from './order.dto';
 import { MessageService } from 'src/message/message.service';
 import { ProductService } from 'src/Product/product.service';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class OrderService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService) { }
+  constructor(private readonly httpService: HttpService, private messageService: MessageService) { }
   private acceptedOrders: OrderDto[] = [
     {
       id: "27793387630",
