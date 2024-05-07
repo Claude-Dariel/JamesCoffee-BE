@@ -30,6 +30,18 @@ export class OrderController {
       });
   }
 
+  @Post(':id/complete')
+  async completeOrder(@Param('id') id: string) {
+    // Assuming completion logic here
+    return { message: `Order ${id} completed successfully` };
+  }
+
+  @Post(':id/prepare')
+  async prepareOrder(@Param('id') id: string) {
+    // Assuming preparation logic here
+    return { message: `Order ${id} prepared successfully` };
+  }
+
   @Get()
   async getAcceptedOrders() {
     try {
