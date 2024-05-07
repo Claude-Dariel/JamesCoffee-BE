@@ -5,10 +5,14 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { ProductDTO } from 'src/Product/Product.dto';
 import { OrderDto } from './order.dto';
 import { MessageService } from 'src/message/message.service';
+import { ProductService } from 'src/Product/product.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly httpService: HttpService, private messageService: MessageService, private acceptedOrders: OrderDto[] = [], private tentativeOrders: OrderDto[] = []) {}
+  constructor(private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService) {}
+  private acceptedOrders: OrderDto[] = [];
+  private tentativeOrders: OrderDto[] = [];
+  private products: ProductDTO[] = [];
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
@@ -27,7 +31,16 @@ export class OrderService {
   }
 
   async receiveOrder(data: OrderDto): Promise<void>{
-    this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [data.id, data.price]);
+    try {
+      const response = await this.productService.findAll();
+      this.products = response.data; // Assuming response.data contains the array of ProductDTO
+    } catch (error) {
+      console.error("Error loading products:", error);
+    };
+
+    const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
+    const productName = requestedProduct?.description ?? 'NO NAME';
+    this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     this.tentativeOrders.push(data);
     console.log('After receiving orders: ')
     console.log('Accepted orders: ', this.acceptedOrders);
