@@ -32,13 +32,13 @@ export class OrderController {
 
   @Post(':id/complete')
   async completeOrder(@Param('id') id: string) {
-    await this.orderService.notifyCustomerOfPreparation(id);
+    await this.orderService.notifyCustomerOfCompletion(id);
     return { message: `Order ${id} completed successfully` };
   }
 
   @Post(':id/prepare')
   async prepareOrder(@Param('id') id: string) {
-    await this.orderService.notifyCustomerOfCompletion(id);
+    await this.orderService.notifyCustomerOfPreparation(id);
     return { message: `Order ${id} prepared successfully` };
   }
 
