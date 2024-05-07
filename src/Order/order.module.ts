@@ -15,6 +15,6 @@ import { ProductService } from 'src/Product/product.service';
     }),
   ],
   controllers: [OrderController],
-  providers: [OrderService, MessageService, ProductService],
+  providers: [OrderService, MessageService],
 })
 export class OrderModule {}

@@ -9,10 +9,11 @@ import { ProductService } from 'src/Product/product.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService) {}
+  constructor(private readonly httpService: HttpService, private messageService: MessageService) {}
   private acceptedOrders: OrderDto[] = [];
   private tentativeOrders: OrderDto[] = [];
   private products: ProductDTO[] = [];
+  productService: any;
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
