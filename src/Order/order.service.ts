@@ -38,7 +38,7 @@ export class OrderService {
     } catch (error) {
       console.error("Error loading products:", error);
     };
-
+    console.log('Products: ', this.products);
     const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
     console.log('Requested product: ', requestedProduct);
     const productName = requestedProduct?.description ?? 'NO NAME';
