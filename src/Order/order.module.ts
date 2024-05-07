@@ -4,6 +4,7 @@ import { OrderService } from './order.service';
 import { HttpModule } from '@nestjs/axios';
 import { MessageService } from 'src/message/message.service';
 import { ProductService } from 'src/Product/product.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ProductService } from 'src/Product/product.service';
         maxRedirects: 1,
       }),
     }),
+    CacheModule.register()
   ],
   controllers: [OrderController],
   providers: [OrderService, MessageService],

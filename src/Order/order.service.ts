@@ -1,16 +1,37 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { ProductDTO } from 'src/Product/Product.dto';
 import { OrderDto } from './order.dto';
 import { MessageService } from 'src/message/message.service';
 import { ProductService } from 'src/Product/product.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly httpService: HttpService, private messageService: MessageService) { }
-  private acceptedOrders: OrderDto[] = [ ];
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService) { }
+  private acceptedOrders: OrderDto[] = [
+    {
+      id: "27793387630",
+      price: "R50.00",
+      name: "Sizwe Tshabangu",
+      phoneNumber: "27793387630",
+      templateName: '',
+      products: [
+        {
+          id: "1",
+          description: "Chakalaka Chai",
+          price: 30.00
+        },
+        {
+          id: "2",
+          description: "Rooibos Latte",
+          price: 40.00
+        }
+      ]
+    }
+  ];
 
   private tentativeOrders: OrderDto[] = [];
   private products: ProductDTO[] = [];
@@ -39,12 +60,13 @@ export class OrderService {
     } catch (error) {
       console.error("Error loading products:", error);
     };
-    console.log('Products: ', this.products);
-    const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
-    console.log('Requested product: ', requestedProduct);
-    const productName = requestedProduct?.description ?? ' ';
+    // console.log('Products: ', this.products);
+    // const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
+    // console.log('Requested product: ', requestedProduct);
+    const productName = '';
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     this.tentativeOrders.push(data);
+
     console.log('After receiving orders: ')
     console.log('Accepted orders: ', this.acceptedOrders);
     console.log('Tentative orders: ', this.tentativeOrders);
