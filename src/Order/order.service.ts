@@ -10,7 +10,15 @@ import { ProductService } from 'src/Product/product.service';
 @Injectable()
 export class OrderService {
   constructor(private readonly httpService: HttpService, private messageService: MessageService) {}
-  private acceptedOrders: OrderDto[] = [];
+  private acceptedOrders: OrderDto[] = [
+    {
+      id: "1",
+      phoneNumber: "2781496903",
+      price: "10",
+      templateName: ''
+    }
+  ];
+  
   private tentativeOrders: OrderDto[] = [];
   private products: ProductDTO[] = [];
   productService: any;
@@ -41,7 +49,7 @@ export class OrderService {
     console.log('Products: ', this.products);
     const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
     console.log('Requested product: ', requestedProduct);
-    const productName = requestedProduct?.description ?? 'NO NAME';
+    const productName = requestedProduct?.description ?? ' ';
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     this.tentativeOrders.push(data);
     console.log('After receiving orders: ')
@@ -99,5 +107,29 @@ export class OrderService {
   // Method to get accepted orders synchronously
   getAcceptedOrders(): OrderDto[] {
     return this.acceptedOrders;
+  }
+
+  async notifyCustomerOfPreparation(order_id: string){
+    let thisOrder = this.acceptedOrders.find(item => item.id === order_id);
+    let phone_number = thisOrder?.phoneNumber;
+
+    if(phone_number){
+      this.messageService.findAllFromWhatsAppBusiness(phone_number, 'order_prepare', []);
+    }
+    else{
+      console.log('Could not notify customer');
+    }
+  }
+
+  async notifyCustomerOfCompletion(order_id: string){
+    let thisOrder = this.acceptedOrders.find(item => item.id === order_id);
+    let phone_number = thisOrder?.phoneNumber;
+
+    if(phone_number){
+      this.messageService.findAllFromWhatsAppBusiness(phone_number, 'order_complete', []);
+    }
+    else{
+      console.log('Could not notify customer');
+    }
   }
 }
