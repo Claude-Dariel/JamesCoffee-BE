@@ -13,7 +13,7 @@ export class OrderService {
   private acceptedOrders: OrderDto[] = [
     {
       id: "1",
-      phoneNumber: "2781496903",
+      phoneNumber: "27814956903",
       price: "10",
       templateName: ''
     }
