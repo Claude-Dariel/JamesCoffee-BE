@@ -10,14 +10,7 @@ import { ProductService } from 'src/Product/product.service';
 @Injectable()
 export class OrderService {
   constructor(private readonly httpService: HttpService, private messageService: MessageService) { }
-  private acceptedOrders: OrderDto[] = [
-    {
-      id: "1",
-      phoneNumber: "27814956903",
-      price: "10",
-      templateName: ''
-    }
-  ];
+  private acceptedOrders: OrderDto[] = [ ];
 
   private tentativeOrders: OrderDto[] = [];
   private products: ProductDTO[] = [];
