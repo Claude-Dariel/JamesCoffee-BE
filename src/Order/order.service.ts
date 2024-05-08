@@ -15,7 +15,7 @@ interface FaceBookResponse {
 
 @Injectable()
 export class OrderService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService) { }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService) { }
   private customerKey = 'customers';
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
@@ -51,7 +51,6 @@ export class OrderService {
   }
 
   private products: ProductDTO[] = [];
-  productService: any;
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
