@@ -77,6 +77,10 @@ export class OrderService {
     // const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
     // console.log('Requested product: ', requestedProduct);
     const productName = '';
+    console.log("Product name", data.phoneNumber);
+    console.log("Template name", data.templateName);
+    console.log("Product name", productName);
+    console.log("Price", data.price);
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     this.tentativeOrders.push(data);
 
