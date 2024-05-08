@@ -91,7 +91,7 @@ export class OrderService {
     }
 
     currentTentativeOrdersforThisIndividual.push(data);
-    await this.cacheManager.set(`tentative-${data.phoneNumber}`, 'value');//this.tentativeOrders.push(data);
+    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);//this.tentativeOrders.push(data);
 
     console.log('After receiving orders: ')
     console.log('Accepted orders: ', []);
@@ -117,8 +117,8 @@ export class OrderService {
       }
       //this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
       currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
-      await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);//this.tentativeOrders.push(data);
-      await this.cacheManager.set(`accepted-${data.phoneNumber}`, currentAcceptedOrdersforThisIndividual);
+      await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
+      await this.cacheManager.set(`accepted-${data.phoneNumber}`, currentAcceptedOrdersforThisIndividual, 0);
     } else {
       console.log('Order not found in tentative orders');
     }
@@ -130,7 +130,7 @@ export class OrderService {
   async cancelOrder(data: OrderDto) {
     let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
     currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
-    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);
+    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);
     console.log('After cancelling orders: ')
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
