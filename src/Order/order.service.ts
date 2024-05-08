@@ -92,7 +92,7 @@ export class OrderService {
     this.addToSetIfNotExists(allCustomers, data.phoneNumber);
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
-    let productResponse = (await this.getAllProducts()).data;
+    let productResponse = (await this.getAllProducts()).data.data;
     console.log('Direct response of getAllProducts: ', productResponse);
     let productList = productResponse as ProductDTO[];
     console.log('Direct response of product list conversion: ', productList);
