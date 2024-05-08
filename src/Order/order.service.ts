@@ -67,7 +67,21 @@ export class OrderService {
     );
   }
 
+  addToSetIfNotExists(array: string[], element: string) {
+      if (!array.includes(element)) {
+          array.push(element);
+      }
+  }
+
   async receiveOrder(data: OrderDto): Promise<void> {
+    
+    let allCustomers = await this.cacheManager.get('customers') as string[];
+    if (allCustomers === undefined || allCustomers === null) {
+      allCustomers = [];
+    }
+    this.addToSetIfNotExists(allCustomers, data.phoneNumber); 
+    await this.cacheManager.set('customers', allCustomers, 0);//this.tentativeOrders.push(data);
+
     try {
       const response = await this.productService.findAll();
       this.products = response.data; // Assuming response.data contains the array of ProductDTO
@@ -137,14 +151,23 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-27814956903`) as OrderDto[];
+    let allCustomers = await this.cacheManager.get('customers') as string[];
 
-    if(currentAcceptedOrdersforThisIndividual === undefined || currentAcceptedOrdersforThisIndividual === null){
-      currentAcceptedOrdersforThisIndividual = [];
+    let allAcceptedOrders: OrderDto[] = [];
+
+    for (const customer of allCustomers) {
+      let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-${customer}`) as OrderDto[];
+
+      if(currentAcceptedOrdersforThisIndividual === undefined || currentAcceptedOrdersforThisIndividual === null){
+        currentAcceptedOrdersforThisIndividual = [];
+      }   
+      else{
+        allAcceptedOrders = allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
+      }
     }
 
     return new Promise(resolve => {
-      resolve(currentAcceptedOrdersforThisIndividual);
+      resolve(allAcceptedOrders);
       console.log('Checking resolve accepted orders');
     }
     );
