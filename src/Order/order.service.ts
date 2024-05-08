@@ -92,7 +92,11 @@ export class OrderService {
     this.addToSetIfNotExists(allCustomers, data.phoneNumber);
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
-    let productList = await this.getAllProducts() as unknown as ProductDTO[];
+    let productResponse = await this.getAllProducts();
+    console.log('Direct response of getAllProducts: ', productResponse);
+    let productList = productResponse as unknown as ProductDTO[];
+    console.log('Direct response of product list conversion: ', productList);
+
     let summaryAndBillOutput = this.generateSummaryAndBill(data, productList);
     let summary = summaryAndBillOutput[0];
     let bill = summaryAndBillOutput[1];
