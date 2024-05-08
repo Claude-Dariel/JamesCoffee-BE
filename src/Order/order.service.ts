@@ -76,7 +76,7 @@ export class OrderService {
     // console.log('Products: ', this.products);
     // const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
     // console.log('Requested product: ', requestedProduct);
-    const productName = '';
+    const productName = 'NO NAME';
     console.log("Product name", data.phoneNumber);
     console.log("Template name", data.templateName);
     console.log("Product name", productName);
