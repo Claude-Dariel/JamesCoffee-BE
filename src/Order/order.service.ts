@@ -75,8 +75,12 @@ export class OrderService {
 
     let products = order.products as ProductDTO[];
 
+    console.log('All products in catalog: ', allProducts);
+
     for(var p of products){
-      let name = allProducts.find(item => item.retailer_id === p.retailer_id)?.name;
+      let productInQuestion = allProducts.find(item => item.retailer_id === p.retailer_id); 
+      console.log('Product requested by customer: ', productInQuestion);
+      let name = productInQuestion?.name;
       let price = p.price;
       bill = bill + price;
       summary.push(`${name} (R ${price})`);
