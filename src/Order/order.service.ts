@@ -86,9 +86,9 @@ export class OrderService {
     
     let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
 
-    if (currentTentativeOrdersforThisIndividual === null){
-      currentTentativeOrdersforThisIndividual = [];
-    }    
+    if (currentTentativeOrdersforThisIndividual === undefined || currentTentativeOrdersforThisIndividual === null) {
+      currentTentativeOrdersforThisIndividual = []; // Initialize as empty array if undefined or null
+    }
 
     currentTentativeOrdersforThisIndividual.push(data);
     await this.cacheManager.set(`tentative-${data.phoneNumber}`, 'value');//this.tentativeOrders.push(data);
@@ -108,7 +108,7 @@ export class OrderService {
     const order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber);
 
     if (order) {
-      if(currentAcceptedOrdersforThisIndividual){
+      if(currentAcceptedOrdersforThisIndividual !== undefined && currentAcceptedOrdersforThisIndividual !== null){
         currentAcceptedOrdersforThisIndividual.push(order);
       }      
       else{
@@ -139,7 +139,7 @@ export class OrderService {
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
     let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-27814956903`) as OrderDto[];
 
-    if(!currentAcceptedOrdersforThisIndividual){
+    if(currentAcceptedOrdersforThisIndividual === undefined || currentAcceptedOrdersforThisIndividual === null){
       currentAcceptedOrdersforThisIndividual = [];
     }
 
