@@ -80,7 +80,7 @@ export class OrderService {
     
 
     for(var p of products){
-      let productInQuestion = allProducts.find(item => item.retailer_id === p.retailer_id); 
+      let productInQuestion = allProducts.find(item => item.retailer_id?.toString() === p.retailer_id?.toString()); 
       console.log('Product requested by customer: ', productInQuestion);
       let name = productInQuestion?.name;
       let price = p.price;
