@@ -91,7 +91,7 @@ export class OrderService {
     }
 
     currentTentativeOrdersforThisIndividual.push(data);
-    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);//this.tentativeOrders.push(data);
+    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
 
     console.log('After receiving orders: ')
     console.log('Accepted orders: ', []);
