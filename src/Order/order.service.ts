@@ -157,8 +157,8 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    let allProducts = await this.getAllProducts();
-    console.log('All products: ', allProducts);
+    // let allProducts = await this.getAllProducts();
+    // console.log('All products: ', allProducts);
 
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
