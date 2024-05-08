@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { WebhookController } from './webhook.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager'; // Import CacheModule
 import { WebhookService } from './webhook.service';
 import { MessageService } from 'src/message/message.service';
 import { OrderDto } from '../Order/order.dto';
 import { OrderService } from 'src/Order/order.service';
-
 
 @Module({
   imports: [
@@ -22,6 +22,7 @@ import { OrderService } from 'src/Order/order.service';
         },
       }),
     }),
+    CacheModule.register(), // Include CacheModule here
   ],
   controllers: [WebhookController],
   providers: [WebhookService, MessageService, OrderService]

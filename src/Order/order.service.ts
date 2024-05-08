@@ -6,10 +6,12 @@ import { ProductDTO } from 'src/Product/Product.dto';
 import { OrderDto } from './order.dto';
 import { MessageService } from 'src/message/message.service';
 import { ProductService } from 'src/Product/product.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly httpService: HttpService, private messageService: MessageService) { }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService) { }
   private acceptedOrders: OrderDto[] = [
     {
       id: "27793387630",
@@ -46,7 +48,6 @@ export class OrderService {
     }
   ];
 
-  private tentativeOrders: OrderDto[] = [];
   private products: ProductDTO[] = [];
   productService: any;
 
@@ -82,41 +83,68 @@ export class OrderService {
     console.log("Product name", productName);
     console.log("Price", data.price);
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
-    this.tentativeOrders.push(data);
+    
+    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
+
+    if (currentTentativeOrdersforThisIndividual === null){
+      currentTentativeOrdersforThisIndividual = [];
+    }    
+
+    currentTentativeOrdersforThisIndividual.push(data);
+    await this.cacheManager.set(`tentative-${data.phoneNumber}`, 'value');//this.tentativeOrders.push(data);
 
     console.log('After receiving orders: ')
-    console.log('Accepted orders: ', this.acceptedOrders);
-    console.log('Tentative orders: ', this.tentativeOrders);
+    console.log('Accepted orders: ', []);
+    console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
   async acceptOrder(data: OrderDto) {
+    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
+    let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-${data.phoneNumber}`) as OrderDto[];
     console.log('Before accepting orders: ')
-    console.log('Accepted orders: ', this.acceptedOrders);
-    console.log('Tentative orders: ', this.tentativeOrders);
-    const order = this.tentativeOrders.find(item => item.phoneNumber === data.phoneNumber);
+    console.log('Accepted orders: ', currentAcceptedOrdersforThisIndividual);
+    console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
+
+    const order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber);
+
     if (order) {
-      this.acceptedOrders.push(order);
+      if(currentAcceptedOrdersforThisIndividual){
+        currentAcceptedOrdersforThisIndividual.push(order);
+      }      
+      else{
+        currentAcceptedOrdersforThisIndividual = [];
+        currentAcceptedOrdersforThisIndividual.push(order);
+      }
       //this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
+      currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
+      await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);//this.tentativeOrders.push(data);
+      await this.cacheManager.set(`accepted-${data.phoneNumber}`, currentAcceptedOrdersforThisIndividual);
     } else {
       console.log('Order not found in tentative orders');
     }
     console.log('After accepting orders: ')
-    console.log('Accepted orders: ', this.acceptedOrders);
-    console.log('Tentative orders: ', this.tentativeOrders);
+    console.log('Accepted orders: ', currentAcceptedOrdersforThisIndividual);
+    console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
   async cancelOrder(data: OrderDto) {
-    this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
+    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
+    currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
+    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual);
     console.log('After cancelling orders: ')
-    console.log('Accepted orders: ', this.acceptedOrders);
-    console.log('Tentative orders: ', this.tentativeOrders);
+    console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
+    let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-27814956903`) as OrderDto[];
+
+    if(!currentAcceptedOrdersforThisIndividual){
+      currentAcceptedOrdersforThisIndividual = [];
+    }
 
     return new Promise(resolve => {
-      resolve(this.acceptedOrders);
+      resolve(currentAcceptedOrdersforThisIndividual);
       console.log('Checking resolve accepted orders');
     }
     );
