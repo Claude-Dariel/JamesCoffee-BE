@@ -18,6 +18,7 @@ export class ProductService {
   ) {}
 
   async findAll() {
+    console.log(`${this.url}/${this.catalogId}/products?${this.parameters}`);
     this.logger.debug('findAll');
     return await firstValueFrom(
       this.httpService
