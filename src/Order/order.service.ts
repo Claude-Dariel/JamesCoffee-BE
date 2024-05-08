@@ -165,9 +165,12 @@ export class OrderService {
 
     for (const customer of allCustomers) {
       let orderKey = this.combinePrefixToKey(this.acceptedKey, customer);
+      console.log('Order key: ', orderKey);
       let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
       allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
     }
+
+    console.log('All accepted orders: ', allAcceptedOrders);
 
     return new Promise(resolve => {
       resolve(allAcceptedOrders);
