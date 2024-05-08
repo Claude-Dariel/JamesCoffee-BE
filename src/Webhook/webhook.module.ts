@@ -7,10 +7,12 @@ import { WebhookService } from './webhook.service';
 import { MessageService } from 'src/message/message.service';
 import { OrderDto } from '../Order/order.dto';
 import { OrderService } from 'src/Order/order.service';
+import { ProductModule } from 'src/Product/product.module';
 
 @Module({
   imports: [
     ConfigModule,
+    ProductModule,
     HttpModule.registerAsync({
       useFactory: () => ({
         timeout: 9000,
