@@ -94,20 +94,8 @@ export class OrderService {
     this.addToSetIfNotExists(allCustomers, data.phoneNumber);
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
-    try {
-      const response = await this.productService.findAll();
-      this.products = response.data; // Assuming response.data contains the array of ProductDTO
-    } catch (error) {
-      console.error("Error loading products:", error);
-    };
-    // console.log('Products: ', this.products);
-    // const requestedProduct = this.products.find(item => item.retailer_id.toString() === data.id);
-    // console.log('Requested product: ', requestedProduct);
     const productName = 'NO NAME';
-    console.log("Product name", data.phoneNumber);
-    console.log("Template name", data.templateName);
-    console.log("Product name", productName);
-    console.log("Price", data.price);
+
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
 
     let orderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
@@ -159,6 +147,15 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
+    let orderKey = this.combinePrefixToKey(this.acceptedKey, '27814956903');
+    let acceptedOrders = await this.getValueFromCache(orderKey) as OrderDto[];
+
+    let tentativeKey = this.combinePrefixToKey(this.tentativeKey, '27814956903');
+    let tentativeOrders = await this.getValueFromCache(tentativeKey) as OrderDto[];
+
+    console.log('Checking what is in accepted orders cache: ', acceptedOrders);
+    console.log('Checking what is in tentative orders cache: ', tentativeOrders);
+    
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
     let allAcceptedOrders: OrderDto[] = [];
