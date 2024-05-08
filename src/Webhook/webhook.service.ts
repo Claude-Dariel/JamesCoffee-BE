@@ -18,7 +18,7 @@ export class WebhookService {
     'EAAN9YXBWtYMBO27nscHjYDHF39NmfQNtpffKYqNZCfMqpb4Xd84GvAdKHFE0J68eORXNxa9ZBBOaIudJM1uHqkIrePLWGZB0yfWdQSFKLNXVgNj4yGHzoIKbgyZCLoVRt8Dbf2hTDZBJsG54KPspGtO5aoM5qnFIqs3dsCDb8j5RCDB1rH5ICeSDupNaSGYibBeN2W5mU74ZBZCNkAceJAZD';
   private mytoken: string = process.env.MYTOKEN || ''; // Providing empty string as default value
   private logger = new Logger();
-  private ORDER = 'type';
+  private ORDER = 'order';
   private BUTTON = 'button';
   private TEXT = 'text';
 
