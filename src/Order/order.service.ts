@@ -169,7 +169,9 @@ export class OrderService {
   }
 
   async notifyCustomerOfPreparation(order_id: string) {
-    let thisOrder = this.acceptedOrders.find(item => item.id === order_id);
+
+    let allAcceptedOrders = await this.getAcceptedOrdersAsync();
+    let thisOrder = allAcceptedOrders.find(item => item.id === order_id);
     let phone_number = thisOrder?.phoneNumber;
 
     if (phone_number) {
@@ -181,7 +183,9 @@ export class OrderService {
   }
 
   async notifyCustomerOfCompletion(order_id: string) {
-    let thisOrder = this.acceptedOrders.find(item => item.id === order_id);
+
+    let allAcceptedOrders = await this.getAcceptedOrdersAsync();
+    let thisOrder = allAcceptedOrders.find(item => item.id === order_id);
     let phone_number = thisOrder?.phoneNumber;
 
     if (phone_number) {
