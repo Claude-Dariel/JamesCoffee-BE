@@ -74,8 +74,10 @@ export class OrderService {
     let bill : number = 0;
 
     let products = order.products as ProductDTO[];
-
+    console.log('Customer order: ', order);
+    console.log('All products requested by customer: ', products);
     console.log('All products in catalog: ', allProducts);
+    
 
     for(var p of products){
       let productInQuestion = allProducts.find(item => item.retailer_id === p.retailer_id); 
