@@ -153,6 +153,10 @@ export class OrderService {
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
     let allCustomers = await this.cacheManager.get('customers') as string[];
 
+    if(allCustomers === undefined || allCustomers === null){
+      allCustomers = [];
+    }
+
     let allAcceptedOrders: OrderDto[] = [];
 
     for (const customer of allCustomers) {
