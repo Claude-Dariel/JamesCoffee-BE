@@ -34,42 +34,6 @@ export class OrderService {
     }
   }
 
-  private acceptedOrders: OrderDto[] = [
-    {
-      id: "27793387630",
-      price: "R50.00",
-      name: "Sizwe Tshabangu",
-      phoneNumber: "27793387630",
-      templateName: '',
-      products: [
-        {
-          id: "1",
-          description: "Chakalaka Chai",
-          price: 30.00
-        },
-        {
-          id: "2",
-          description: "Rooibos Latte",
-          price: 40.00
-        }
-      ]
-    },
-    {
-      id: "27814956903",
-      price: "R60.00",
-      name: "Gerald Kirui",
-      phoneNumber: "27814956903",
-      templateName: '',
-      products: [
-        {
-          id: "2",
-          description: "Rooibos Latte",
-          price: 60.00
-        }
-      ]
-    }
-  ];
-
   private products: ProductDTO[] = [];
   productService: any;
 
