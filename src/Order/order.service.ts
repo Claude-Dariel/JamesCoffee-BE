@@ -165,7 +165,7 @@ export class OrderService {
       console.log('Order key: ', orderKey);
       let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
       console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
-      allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
+      allAcceptedOrders = allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
     }
 
     console.log('All accepted orders: ', allAcceptedOrders);
