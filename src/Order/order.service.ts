@@ -12,6 +12,18 @@ import { Cache } from 'cache-manager';
 @Injectable()
 export class OrderService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService) { }
+  private customerKey = 'customers';
+  private tentativeKey = 'tentative';
+  private acceptedKey = 'accepted';
+
+  private async getValueFromCache(key: string) : Promise<unknown> {
+    let output = await this.cacheManager.get(key);
+    if(output === undefined || output === null){
+      output = [];
+    }
+    return output;
+  }
+
   private acceptedOrders: OrderDto[] = [
     {
       id: "27793387630",
@@ -75,12 +87,9 @@ export class OrderService {
 
   async receiveOrder(data: OrderDto): Promise<void> {
     
-    let allCustomers = await this.cacheManager.get('customers') as string[];
-    if (allCustomers === undefined || allCustomers === null) {
-      allCustomers = [];
-    }
+    let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
     this.addToSetIfNotExists(allCustomers, data.phoneNumber); 
-    await this.cacheManager.set('customers', allCustomers, 0);//this.tentativeOrders.push(data);
+    await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
     try {
       const response = await this.productService.findAll();
@@ -98,7 +107,7 @@ export class OrderService {
     console.log("Price", data.price);
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
     
-    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
+    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`${this.tentativeKey}-${data.phoneNumber}`) as OrderDto[];
 
     if (currentTentativeOrdersforThisIndividual === undefined || currentTentativeOrdersforThisIndividual === null) {
       currentTentativeOrdersforThisIndividual = []; // Initialize as empty array if undefined or null
@@ -151,7 +160,7 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    let allCustomers = await this.cacheManager.get('customers') as string[];
+    let allCustomers = await this.cacheManager.get(this.customerKey) as string[];
 
     if(allCustomers === undefined || allCustomers === null){
       allCustomers = [];
