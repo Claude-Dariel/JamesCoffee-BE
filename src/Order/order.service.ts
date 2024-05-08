@@ -39,10 +39,17 @@ export class OrderService {
   }
 
   private async getAllProducts(){
-    let out = await this.productService.findAll();
-    console.log('The list of products: ', out);
-    return out;
+    try {
+      const products = await this.productService.findAll();
+      console.log('The list of products: ', products);
+      return products;
+    } catch (error) {
+      // Log the error or handle it appropriately
+      console.error('Error while fetching products:', error);
+      throw new Error('Failed to fetch products'); // or handle error as needed
+    }
   }
+  
 
   private products: ProductDTO[] = [];
 
