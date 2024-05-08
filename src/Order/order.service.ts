@@ -155,7 +155,7 @@ export class OrderService {
 
     console.log('Checking what is in accepted orders cache: ', acceptedOrders);
     console.log('Checking what is in tentative orders cache: ', tentativeOrders);
-    
+
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
     let allAcceptedOrders: OrderDto[] = [];
@@ -164,6 +164,7 @@ export class OrderService {
       let orderKey = this.combinePrefixToKey(this.acceptedKey, customer);
       console.log('Order key: ', orderKey);
       let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
+      console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
       allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
     }
 
