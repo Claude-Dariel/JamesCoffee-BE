@@ -8,11 +8,11 @@ import { MessageService } from 'src/message/message.service';
 import { OrderDto } from '../Order/order.dto';
 import { OrderService } from 'src/Order/order.service';
 import { ProductModule } from 'src/Product/product.module';
+import { ProductService } from 'src/Product/product.service';
 
 @Module({
   imports: [
     ConfigModule,
-    ProductModule,
     HttpModule.registerAsync({
       useFactory: () => ({
         timeout: 9000,
@@ -27,6 +27,6 @@ import { ProductModule } from 'src/Product/product.module';
     CacheModule.register(), // Include CacheModule here
   ],
   controllers: [WebhookController],
-  providers: [WebhookService, MessageService, OrderService]
+  providers: [WebhookService, MessageService, OrderService, ProductService]
 })
 export class WebhookModule {}
