@@ -8,4 +8,5 @@ export interface OrderDto {
   templateName: string;
   customerResponse?: string;
   products?: ProductDTO[];
+  retailer_id?: string;
 }

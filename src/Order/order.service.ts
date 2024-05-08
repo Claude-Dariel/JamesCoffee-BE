@@ -69,14 +69,35 @@ export class OrderService {
     );
   }
 
+  private generateSummaryAndBill(order: OrderDto, allProducts: ProductDTO[]): string[] {
+    let summary: string[] = [];
+    let bill : number = 0;
+
+    let products = order.products as ProductDTO[];
+
+    for(var p of products){
+      let name = allProducts.find(item => item.retailer_id === p.retailer_id)?.name;
+      let price = p.price;
+      bill = bill + price;
+      summary.push(`${name} (R ${price})`);
+    }
+
+    let summaryOutput = summary.join(" ");
+    let billOutput = bill.toString();
+    return [summaryOutput, billOutput];
+  }
+
   async receiveOrder(data: OrderDto): Promise<void> {
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
     this.addToSetIfNotExists(allCustomers, data.phoneNumber);
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
-    const productName = 'NO NAME';
+    let productList = await this.getAllProducts() as unknown as ProductDTO[];
+    let summaryAndBillOutput = this.generateSummaryAndBill(data, productList);
+    let summary = summaryAndBillOutput[0];
+    let bill = summaryAndBillOutput[1];
 
-    this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
+    this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [summary, bill]);
 
     let orderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
     let currentTentativeOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];

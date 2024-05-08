@@ -10,6 +10,7 @@ import { send } from 'process';
 import { OrderDto } from 'src/Order/order.dto';
 import { OrderService } from 'src/Order/order.service';
 import { v4 as uuidv4 } from 'uuid';
+import { ProductDTO } from 'src/Product/Product.dto';
 
 @Injectable()
 export class WebhookService {
@@ -45,11 +46,26 @@ export class WebhookService {
   }
 
   private handleOrderMessage(data: WebhookDTO) {
+
+    let items = data.entry[0].changes[0].value.messages[0].order.product_items;
+    let products: ProductDTO[] = [];
+
+    for(var item of items){
+      products.push({
+        id: '',
+        name: '',
+        description: '',
+        price: Number(item.item_price),
+        retailer_id: Number(item.product_retailer_id)
+      });
+    }
+
     const order: OrderDto = {
       id: this.generateGUID(),
-      price: data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price,
+      price: '',
       phoneNumber: data.entry[0].changes[0].value.contacts[0].wa_id,
-      templateName: 'order_confirmation'
+      templateName: 'order_confirmation',
+      products: products
     };
 
     this.orderService.receiveOrder(order);
