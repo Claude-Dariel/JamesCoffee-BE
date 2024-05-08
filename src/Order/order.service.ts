@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
-import { AxiosError } from 'axios';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { AxiosError, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { ProductDTO } from 'src/Product/Product.dto';
 import { OrderDto } from './order.dto';
@@ -8,6 +8,10 @@ import { MessageService } from 'src/message/message.service';
 import { ProductService } from 'src/Product/product.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+
+interface FaceBookResponse {
+  data: ProductDTO[];
+}
 
 @Injectable()
 export class OrderService {
@@ -32,6 +36,18 @@ export class OrderService {
     if (!array.includes(element)) {
       array.push(element);
     }
+  }
+
+  private async getAllProducts(){
+    return await this.productService
+      .findAll()
+      .then(
+        (axiosResponse: AxiosResponse<FaceBookResponse>) =>
+          axiosResponse.data.data,
+      )
+      .catch((error: AxiosError) => {
+        throw new HttpException(error.message, error.status as number);
+      });
   }
 
   private products: ProductDTO[] = [];
@@ -111,6 +127,9 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
+    let allProducts = await this.getAllProducts();
+    console.log('All products: ', allProducts);
+
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
     let allAcceptedOrders: OrderDto[] = [];
