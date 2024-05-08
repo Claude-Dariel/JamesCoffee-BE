@@ -88,7 +88,7 @@ export class OrderService {
       summary.push(`${name} (R ${price})`);
     }
 
-    let summaryOutput = summary.join(" ");
+    let summaryOutput = summary.join(", ");
     let billOutput = bill.toString();
     return [summaryOutput, billOutput];
   }
