@@ -9,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { send } from 'process';
 import { OrderDto } from 'src/Order/order.dto';
 import { OrderService } from 'src/Order/order.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class WebhookService {
@@ -23,6 +24,10 @@ export class WebhookService {
 
   constructor(private messageService: MessageService, private orderService: OrderService) {
     dotenv.config();
+  }
+
+  private generateGUID(): string {
+    return uuidv4();
   }
 
   verifyWebhook(mode: string, verifyToken: string, challenge: string) {
@@ -46,7 +51,7 @@ export class WebhookService {
 
     if(thisType === 'order'){
       const order: OrderDto = {
-        id: data.entry[0].changes[0].value.messages[0].order.product_items[0].product_retailer_id,
+        id: this.generateGUID(),
         price: data.entry[0].changes[0].value.messages[0].order.product_items[0].item_price,
         phoneNumber: phoneNumber,
         templateName: 'order_confirmation' 

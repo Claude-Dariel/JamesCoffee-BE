@@ -147,15 +147,6 @@ export class OrderService {
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    let orderKey = this.combinePrefixToKey(this.acceptedKey, '27814956903');
-    let acceptedOrders = await this.getValueFromCache(orderKey) as OrderDto[];
-
-    let tentativeKey = this.combinePrefixToKey(this.tentativeKey, '27814956903');
-    let tentativeOrders = await this.getValueFromCache(tentativeKey) as OrderDto[];
-
-    console.log('Checking what is in accepted orders cache: ', acceptedOrders);
-    console.log('Checking what is in tentative orders cache: ', tentativeOrders);
-
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
     let allAcceptedOrders: OrderDto[] = [];
@@ -175,11 +166,6 @@ export class OrderService {
       console.log('Checking resolve accepted orders');
     }
     );
-  }
-
-  // Method to get accepted orders synchronously
-  getAcceptedOrders(): OrderDto[] {
-    return this.acceptedOrders;
   }
 
   async notifyCustomerOfPreparation(order_id: string) {
