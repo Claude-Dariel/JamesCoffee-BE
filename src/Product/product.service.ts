@@ -20,27 +20,16 @@ export class ProductService {
   async findAll() {
     console.log(`${this.url}/${this.catalogId}/products?${this.parameters}`);
     this.logger.debug('findAll');
-    try {
-      const response = await this.httpService
+    return await firstValueFrom(
+      this.httpService
         .get(`${this.url}/${this.catalogId}/products?${this.parameters}`)
         .pipe(
-          take(1), // Ensure that the observable completes after emitting the first value
           catchError((error: AxiosError) => {
             this.logger.error(error);
             throw error;
           }),
-        )
-        .toPromise(); // Convert observable to promise
-      
-      if (!response) {
-        throw new Error('Response is undefined');
-      }
-  
-      return response.data; // Assuming the data is in the 'data' property of the response
-    } catch (error) {
-      this.logger.error(error);
-      throw error;
-    }
+        ),
+    );
   }
 
   async findById(id: number) {
