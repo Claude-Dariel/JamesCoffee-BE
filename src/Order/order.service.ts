@@ -16,12 +16,22 @@ export class OrderService {
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
 
-  private async getValueFromCache(key: string) : Promise<unknown> {
+  private async getValueFromCache(key: string): Promise<unknown> {
     let output = await this.cacheManager.get(key);
-    if(output === undefined || output === null){
+    if (output === undefined || output === null) {
       output = [];
     }
     return output;
+  }
+
+  private combinePrefixToKey(prefix: string, key: string): string {
+    return `${prefix}-${key}`;
+  }
+
+  private addToSetIfNotExists(array: string[], element: string) {
+    if (!array.includes(element)) {
+      array.push(element);
+    }
   }
 
   private acceptedOrders: OrderDto[] = [
@@ -79,16 +89,9 @@ export class OrderService {
     );
   }
 
-  addToSetIfNotExists(array: string[], element: string) {
-      if (!array.includes(element)) {
-          array.push(element);
-      }
-  }
-
   async receiveOrder(data: OrderDto): Promise<void> {
-    
     let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
-    this.addToSetIfNotExists(allCustomers, data.phoneNumber); 
+    this.addToSetIfNotExists(allCustomers, data.phoneNumber);
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
     try {
@@ -106,15 +109,12 @@ export class OrderService {
     console.log("Product name", productName);
     console.log("Price", data.price);
     this.messageService.findAllFromWhatsAppBusiness(data.phoneNumber, data.templateName, [productName, data.price]);
-    
-    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`${this.tentativeKey}-${data.phoneNumber}`) as OrderDto[];
 
-    if (currentTentativeOrdersforThisIndividual === undefined || currentTentativeOrdersforThisIndividual === null) {
-      currentTentativeOrdersforThisIndividual = []; // Initialize as empty array if undefined or null
-    }
+    let orderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
+    let currentTentativeOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
 
     currentTentativeOrdersforThisIndividual.push(data);
-    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
+    await this.cacheManager.set(orderKey, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
 
     console.log('After receiving orders: ')
     console.log('Accepted orders: ', []);
@@ -122,8 +122,12 @@ export class OrderService {
   }
 
   async acceptOrder(data: OrderDto) {
-    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
-    let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-${data.phoneNumber}`) as OrderDto[];
+    let tentativeOrderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
+    let currentTentativeOrdersforThisIndividual = await this.getValueFromCache(tentativeOrderKey) as OrderDto[];
+
+    let acceptedOrderKey = this.combinePrefixToKey(this.acceptedKey, data.phoneNumber);
+    let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(acceptedOrderKey) as OrderDto[];
+
     console.log('Before accepting orders: ')
     console.log('Accepted orders: ', currentAcceptedOrdersforThisIndividual);
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
@@ -131,17 +135,11 @@ export class OrderService {
     const order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber);
 
     if (order) {
-      if(currentAcceptedOrdersforThisIndividual !== undefined && currentAcceptedOrdersforThisIndividual !== null){
-        currentAcceptedOrdersforThisIndividual.push(order);
-      }      
-      else{
-        currentAcceptedOrdersforThisIndividual = [];
-        currentAcceptedOrdersforThisIndividual.push(order);
-      }
+      currentAcceptedOrdersforThisIndividual.push(order);
       //this.tentativeOrders = this.tentativeOrders.filter(item => item.phoneNumber !== data.phoneNumber);
       currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
-      await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
-      await this.cacheManager.set(`accepted-${data.phoneNumber}`, currentAcceptedOrdersforThisIndividual, 0);
+      await this.cacheManager.set(tentativeOrderKey, currentTentativeOrdersforThisIndividual, 0);//this.tentativeOrders.push(data);
+      await this.cacheManager.set(acceptedOrderKey, currentAcceptedOrdersforThisIndividual, 0);
     } else {
       console.log('Order not found in tentative orders');
     }
@@ -151,32 +149,24 @@ export class OrderService {
   }
 
   async cancelOrder(data: OrderDto) {
-    let currentTentativeOrdersforThisIndividual = await this.cacheManager.get(`tentative-${data.phoneNumber}`) as OrderDto[];
+    let orderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
+    let currentTentativeOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
     currentTentativeOrdersforThisIndividual = currentTentativeOrdersforThisIndividual.filter(item => item.phoneNumber !== data.phoneNumber);
-    await this.cacheManager.set(`tentative-${data.phoneNumber}`, currentTentativeOrdersforThisIndividual, 0);
+    await this.cacheManager.set(orderKey, currentTentativeOrdersforThisIndividual, 0);
     console.log('After cancelling orders: ')
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
   // Method to get accepted orders asynchronously
   async getAcceptedOrdersAsync(): Promise<OrderDto[]> {
-    let allCustomers = await this.cacheManager.get(this.customerKey) as string[];
-
-    if(allCustomers === undefined || allCustomers === null){
-      allCustomers = [];
-    }
+    let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
 
     let allAcceptedOrders: OrderDto[] = [];
 
     for (const customer of allCustomers) {
-      let currentAcceptedOrdersforThisIndividual = await this.cacheManager.get(`accepted-${customer}`) as OrderDto[];
-
-      if(currentAcceptedOrdersforThisIndividual === undefined || currentAcceptedOrdersforThisIndividual === null){
-        currentAcceptedOrdersforThisIndividual = [];
-      }   
-      else{
-        allAcceptedOrders = allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
-      }
+      let orderKey = this.combinePrefixToKey(this.acceptedKey, customer);
+      let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
+      allAcceptedOrders.concat(currentAcceptedOrdersforThisIndividual);
     }
 
     return new Promise(resolve => {
