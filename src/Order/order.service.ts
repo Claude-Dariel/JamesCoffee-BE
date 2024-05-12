@@ -15,10 +15,13 @@ interface FaceBookResponse {
 
 @Injectable()
 export class OrderService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService) { }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService){
+    this.getAllProducts();
+  }
   private customerKey = 'customers';
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
+  private products: ProductDTO[] = [];
 
   private async getValueFromCache(key: string): Promise<unknown> {
     let output = await this.cacheManager.get(key);
@@ -39,19 +42,8 @@ export class OrderService {
   }
 
   private async getAllProducts(){
-    try {
-      const products = await this.productService.findAll();
-      console.log('The list of products: ', products);
-      return products;
-    } catch (error) {
-      // Log the error or handle it appropriately
-      console.error('Error while fetching products:', error);
-      throw new Error('Failed to fetch products'); // or handle error as needed
-    }
+    this.products = this.productService.getAllProducts();
   }
-  
-
-  private products: ProductDTO[] = [];
 
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
@@ -99,7 +91,7 @@ export class OrderService {
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
     console.log('Incoming data (to check products): ', data);
-    let productResponse = (await this.getAllProducts()).data.data;
+    let productResponse = this.products;
     let productList = productResponse as ProductDTO[];
 
     let summaryAndBillOutput = this.generateSummaryAndBill(data, productList);

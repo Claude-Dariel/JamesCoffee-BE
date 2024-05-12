@@ -26,15 +26,16 @@ export class ProductController {
 
   @Get()
   async findAll() {
-    return await this.productService
-      .findAll()
-      .then(
-        (axiosResponse: AxiosResponse<FaceBookResponse>) =>
-          axiosResponse.data.data,
-      )
-      .catch((error: AxiosError) => {
-        throw new HttpException(error.message, error.status as number);
-      });
+    return await this.productService.getAllProducts();
+    // return await this.productService
+    //   .findAll()
+    //   .then(
+    //     (axiosResponse: AxiosResponse<FaceBookResponse>) =>
+    //       axiosResponse.data.data,
+    //   )
+    //   .catch((error: AxiosError) => {
+    //     throw new HttpException(error.message, error.status as number);
+    //   });
   }
 
   @Get(':id')

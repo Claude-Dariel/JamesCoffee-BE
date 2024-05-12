@@ -12,10 +12,25 @@ export class ProductService {
   private url = `${this.configService.get('FACEBOOK_GRAPH')}/${this.configService.get('CLOUD_API_VERSION')}`;
   private catalogId = this.configService.get('PRODUCT_CATALOG_ID');
   private logger = new Logger();
+  private allProducts: ProductDTO[] = [];
   constructor(
     private readonly httpService: HttpService,
     private configService: ConfigService,
-  ) {}
+  ) {
+    this.initializeProducts();
+  }
+
+  private async initializeProducts(): Promise<void> {
+    try {
+      this.allProducts = (await this.findAll()).data.data; // Example: Assuming getProducts() returns a Promise<ProductDTO[]>
+    } catch (error) {
+      console.error('Error initializing products:', error);
+    }
+  }
+
+  getAllProducts(){
+    return this.allProducts;
+  }
 
   async findAll() {
     console.log(`${this.url}/${this.catalogId}/products?${this.parameters}`);
