@@ -30,6 +30,28 @@ export class OrderService {
     }
     return output;
   }
+  
+  async removeFromAcceptedOrders(id: string){
+    let allCustomers = await this.getValueFromCache(this.customerKey) as string[];
+
+    for (const customer of allCustomers) {
+      let orderKey = this.combinePrefixToKey(this.acceptedKey, customer);
+      console.log('Order key: ', orderKey);
+      let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
+      console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
+
+      const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
+
+      if(updatedAcceptedOrders.length === 0){
+        this.cacheManager.del(orderKey);
+        break;
+      }
+      else{
+        this.cacheManager.set(orderKey, updatedAcceptedOrders);
+        break;
+      }
+    }
+  }
 
   private combinePrefixToKey(prefix: string, key: string): string {
     return `${prefix}-${key}`;
