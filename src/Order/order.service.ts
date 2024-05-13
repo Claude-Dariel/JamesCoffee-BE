@@ -48,6 +48,9 @@ export class OrderService {
       currentPreparingOrdersList.push(preparingOrder);
       await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList);
       console.log('Current preparing orders list: ', currentPreparingOrdersList);
+      const newPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+      console.log('New Current preparing orders list after persisting: ', newPreparingOrdersList);
+
 
       if(updatedAcceptedOrders.length === 0){
         this.cacheManager.del(orderKey);        
