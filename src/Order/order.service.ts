@@ -15,9 +15,7 @@ interface FaceBookResponse {
 
 @Injectable()
 export class OrderService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService){
-    this.getAllProducts();
-  }
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache, private readonly httpService: HttpService, private messageService: MessageService, private productService: ProductService){}
   private customerKey = 'customers';
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
@@ -74,10 +72,6 @@ export class OrderService {
     }
   }
 
-  private async getAllProducts(){
-    this.products = this.productService.getAllProducts();
-  }
-
   async order(requestData: ProductDTO) {
     return await firstValueFrom(
       this.httpService
@@ -124,7 +118,7 @@ export class OrderService {
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
     console.log('Incoming data (to check products): ', data);
-    let productResponse = this.products;
+    let productResponse = this.productService.getAllProducts();
     let productList = productResponse as ProductDTO[];
 
     let summaryAndBillOutput = this.generateSummaryAndBill(data, productList);
