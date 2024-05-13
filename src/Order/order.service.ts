@@ -138,6 +138,19 @@ export class OrderService {
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
+  private attachProductNames(order: OrderDto): OrderDto{
+    let products = order.products as ProductDTO[];
+    let allProducts = this.productService.getAllProducts();
+    let updatedProducts: ProductDTO[] = []; 
+
+    for(var p of products){
+      let productInQuestion = allProducts.find(item => item.retailer_id?.toString() === p.retailer_id?.toString()) as ProductDTO; 
+      updatedProducts.push(productInQuestion);
+    }
+    order.products = updatedProducts;
+    return order;
+  }
+
   async acceptOrder(data: OrderDto) {
     let tentativeOrderKey = this.combinePrefixToKey(this.tentativeKey, data.phoneNumber);
     let currentTentativeOrdersforThisIndividual = await this.getValueFromCache(tentativeOrderKey) as OrderDto[];
@@ -149,7 +162,9 @@ export class OrderService {
     console.log('Accepted orders: ', currentAcceptedOrdersforThisIndividual);
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
 
-    const order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber);
+    let order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber) as OrderDto;
+
+    order = this.attachProductNames(order);
 
     if (order) {
       currentAcceptedOrdersforThisIndividual.push(order);
