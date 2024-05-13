@@ -39,7 +39,6 @@ export class OrderController {
   @Post(':id/prepare')
   async prepareOrder(@Param('id') id: string) {
     await this.orderService.notifyCustomerOfPreparation(id);
-    this.orderService.removeFromAcceptedOrders(id);
     return { message: `Order ${id} prepared successfully` };
   }
 

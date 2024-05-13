@@ -21,6 +21,7 @@ export class OrderService {
   private customerKey = 'customers';
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
+  private preparingKey = 'preparing';
   private products: ProductDTO[] = [];
 
   private async getValueFromCache(key: string): Promise<unknown> {
@@ -40,10 +41,16 @@ export class OrderService {
       let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
       console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
 
+      let preparingOrderKey = this.combinePrefixToKey(this.preparingKey, customer);
+      const preparingOrder = currentAcceptedOrdersforThisIndividual.find((order) => order.id === id) as OrderDto;
       const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
 
+      const currentPreparingOrdersList = await this.getValueFromCache(preparingOrderKey) as OrderDto[];
+      currentPreparingOrdersList.push(preparingOrder);
+      await this.cacheManager.set(preparingOrderKey, preparingOrder);
+
       if(updatedAcceptedOrders.length === 0){
-        this.cacheManager.del(orderKey);
+        this.cacheManager.del(orderKey);        
         break;
       }
       else{
@@ -207,6 +214,8 @@ export class OrderService {
     else {
       console.log('Could not notify customer');
     }
+
+    this.removeFromAcceptedOrders(order_id);
   }
 
   async notifyCustomerOfCompletion(order_id: string) {

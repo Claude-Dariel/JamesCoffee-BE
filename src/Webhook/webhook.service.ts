@@ -46,6 +46,7 @@ export class WebhookService {
   }
 
   private handleOrderMessage(data: WebhookDTO) {
+    console.log('Order incoming: ', data);
 
     let items = data.entry[0].changes[0].value.messages[0].order.product_items;
     let products: ProductDTO[] = [];
