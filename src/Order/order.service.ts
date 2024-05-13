@@ -223,12 +223,12 @@ export class OrderService {
 
   async notifyCustomerOfCompletion(order_id: string) {
 
-    let allPreparedOrders = await this.getValueFromCache(this.preparingKey) as OrderDto[];
-    console.log('All prepared orders: ', allPreparedOrders);
-    let thisOrder = allPreparedOrders.find(item => item.id === order_id);
+    const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+    console.log('All prepared orders: ', currentPreparingOrdersList);
+    let thisOrder = currentPreparingOrdersList.find(item => item.id === order_id);
     let phone_number = thisOrder?.phoneNumber;
 
-    const updatedPreparedOrders = allPreparedOrders.filter(item => item.id !== order_id);
+    const updatedPreparedOrders = currentPreparingOrdersList.filter(item => item.id !== order_id);
     await this.cacheManager.set(this.preparingKey, updatedPreparedOrders);
 
     if (phone_number) {
