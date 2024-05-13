@@ -47,6 +47,7 @@ export class OrderService {
       const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
       currentPreparingOrdersList.push(preparingOrder);
       await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList);
+      console.log('Current preparing orders list: ', currentPreparingOrdersList);
 
       if(updatedAcceptedOrders.length === 0){
         this.cacheManager.del(orderKey);        
@@ -220,6 +221,7 @@ export class OrderService {
   async notifyCustomerOfCompletion(order_id: string) {
 
     let allPreparedOrders = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+    console.log('All prepared orders: ', allPreparedOrders);
     let thisOrder = allPreparedOrders.find(item => item.id === order_id);
     let phone_number = thisOrder?.phoneNumber;
 
