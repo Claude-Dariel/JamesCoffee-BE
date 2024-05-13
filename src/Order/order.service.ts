@@ -218,7 +218,7 @@ export class OrderService {
       console.log('Could not notify customer');
     }
 
-    this.removeFromAcceptedOrders(order_id);
+    await this.removeFromAcceptedOrders(order_id);
   }
 
   async notifyCustomerOfCompletion(order_id: string) {
