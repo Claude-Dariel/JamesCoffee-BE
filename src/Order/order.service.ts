@@ -21,7 +21,7 @@ export class OrderService {
   private customerKey = 'customers';
   private tentativeKey = 'tentative';
   private acceptedKey = 'accepted';
-  private preparingKey = 'preparing';
+  private preparingKey = 'prepared';
   private products: ProductDTO[] = [];
 
   private async getValueFromCache(key: string): Promise<unknown> {
@@ -41,13 +41,12 @@ export class OrderService {
       let currentAcceptedOrdersforThisIndividual = await this.getValueFromCache(orderKey) as OrderDto[];
       console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
 
-      let preparingOrderKey = this.combinePrefixToKey(this.preparingKey, customer);
       const preparingOrder = currentAcceptedOrdersforThisIndividual.find((order) => order.id === id) as OrderDto;
       const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
 
-      const currentPreparingOrdersList = await this.getValueFromCache(preparingOrderKey) as OrderDto[];
+      const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
       currentPreparingOrdersList.push(preparingOrder);
-      await this.cacheManager.set(preparingOrderKey, preparingOrder);
+      await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList);
 
       if(updatedAcceptedOrders.length === 0){
         this.cacheManager.del(orderKey);        
@@ -220,9 +219,12 @@ export class OrderService {
 
   async notifyCustomerOfCompletion(order_id: string) {
 
-    let allAcceptedOrders = await this.getAcceptedOrdersAsync();
-    let thisOrder = allAcceptedOrders.find(item => item.id === order_id);
+    let allPreparedOrders = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+    let thisOrder = allPreparedOrders.find(item => item.id === order_id);
     let phone_number = thisOrder?.phoneNumber;
+
+    const updatedPreparedOrders = allPreparedOrders.filter(item => item.id !== order_id);
+    await this.cacheManager.set(this.preparingKey, updatedPreparedOrders);
 
     if (phone_number) {
       this.messageService.findAllFromWhatsAppBusiness(phone_number, 'order_complete', []);
