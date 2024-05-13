@@ -47,7 +47,7 @@ export class OrderService {
       console.log('Preparing key when persisting: ', this.preparingKey);
       const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
       currentPreparingOrdersList.push(preparingOrder);
-      await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList);
+      await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList, 0);
       console.log('Current preparing orders list: ', currentPreparingOrdersList);
       const newPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
       console.log('New Current preparing orders list after persisting: ', newPreparingOrdersList);
@@ -58,7 +58,7 @@ export class OrderService {
         break;
       }
       else{
-        this.cacheManager.set(orderKey, updatedAcceptedOrders);
+        this.cacheManager.set(orderKey, updatedAcceptedOrders, 0);
         break;
       }
     }
@@ -231,7 +231,7 @@ export class OrderService {
     let phone_number = thisOrder?.phoneNumber;
 
     const updatedPreparedOrders = currentPreparingOrdersList.filter(item => item.id !== order_id);
-    await this.cacheManager.set(this.preparingKey, updatedPreparedOrders);
+    await this.cacheManager.set(this.preparingKey, updatedPreparedOrders, 0);
 
     if (phone_number) {
       this.messageService.findAllFromWhatsAppBusiness(phone_number, 'order_complete', []);
