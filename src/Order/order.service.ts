@@ -44,6 +44,7 @@ export class OrderService {
       const preparingOrder = currentAcceptedOrdersforThisIndividual.find((order) => order.id === id) as OrderDto;
       const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
 
+      console.log('Preparing key when persisting: ', this.preparingKey);
       const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
       currentPreparingOrdersList.push(preparingOrder);
       await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList);
@@ -223,6 +224,7 @@ export class OrderService {
 
   async notifyCustomerOfCompletion(order_id: string) {
 
+    console.log('Preparing key when retrieving: ', this.preparingKey);
     const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
     console.log('All prepared orders: ', currentPreparingOrdersList);
     let thisOrder = currentPreparingOrdersList.find(item => item.id === order_id);
