@@ -40,24 +40,25 @@ export class OrderService {
       console.log('Checking what is in accepted orders cache: ', currentAcceptedOrdersforThisIndividual);
 
       const preparingOrder = currentAcceptedOrdersforThisIndividual.find((order) => order.id === id) as OrderDto;
-      const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
 
-      console.log('Preparing key when persisting: ', this.preparingKey);
-      const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
-      currentPreparingOrdersList.push(preparingOrder);
-      await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList, 0);
-      console.log('Current preparing orders list: ', currentPreparingOrdersList);
-      const newPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
-      console.log('New Current preparing orders list after persisting: ', newPreparingOrdersList);
+      if(preparingOrder){
+        const updatedAcceptedOrders = currentAcceptedOrdersforThisIndividual.filter((order) => order.id !== id);
+        console.log('Preparing key when persisting: ', this.preparingKey);
+        const currentPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+        currentPreparingOrdersList.push(preparingOrder);
+        await this.cacheManager.set(this.preparingKey, currentPreparingOrdersList, 0);
+        console.log('Current preparing orders list: ', currentPreparingOrdersList);
+        const newPreparingOrdersList = await this.getValueFromCache(this.preparingKey) as OrderDto[];
+        console.log('New Current preparing orders list after persisting: ', newPreparingOrdersList);
 
-
-      if(updatedAcceptedOrders.length === 0){
-        this.cacheManager.del(orderKey);        
-        break;
-      }
-      else{
-        this.cacheManager.set(orderKey, updatedAcceptedOrders, 0);
-        break;
+        if(updatedAcceptedOrders.length === 0){
+          this.cacheManager.del(orderKey);        
+          break;
+        }
+        else{
+          this.cacheManager.set(orderKey, updatedAcceptedOrders, 0);
+          break;
+        }
       }
     }
   }
