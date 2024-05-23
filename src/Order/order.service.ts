@@ -119,7 +119,7 @@ export class OrderService {
     await this.cacheManager.set(this.customerKey, allCustomers, 0);
 
     console.log('Incoming data (to check products): ', data);
-    let productResponse = this.productService.getAllProducts();
+    let productResponse = await this.productService.getAllProducts();
     let productList = productResponse as ProductDTO[];
 
     let summaryAndBillOutput = this.generateSummaryAndBill(data, productList);
@@ -139,9 +139,9 @@ export class OrderService {
     console.log('Tentative orders: ', currentTentativeOrdersforThisIndividual);
   }
 
-  private attachProductNames(order: OrderDto): OrderDto{
+  private async attachProductNames(order: OrderDto): Promise<OrderDto>{
     let products = order.products as ProductDTO[];
-    let allProducts = this.productService.getAllProducts();
+    let allProducts = await this.productService.getAllProducts();
     let updatedProducts: ProductDTO[] = []; 
 
     for(var p of products){
@@ -165,7 +165,7 @@ export class OrderService {
 
     let order = currentTentativeOrdersforThisIndividual.find(item => item.phoneNumber === data.phoneNumber) as OrderDto;
 
-    order = this.attachProductNames(order);
+    order = await this.attachProductNames(order);
 
     if (order) {
       currentAcceptedOrdersforThisIndividual.push(order);

@@ -17,7 +17,7 @@ export class ProductService {
     private readonly httpService: HttpService,
     private configService: ConfigService,
   ) {
-    this.initializeProducts();
+    
   }
 
   private async initializeProducts(): Promise<void> {
@@ -28,7 +28,8 @@ export class ProductService {
     }
   }
 
-  getAllProducts(){
+  async getAllProducts(){
+    await this.initializeProducts();
     return this.allProducts;
   }
 
