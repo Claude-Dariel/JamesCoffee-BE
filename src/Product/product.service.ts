@@ -17,7 +17,7 @@ export class ProductService {
     private readonly httpService: HttpService,
     private configService: ConfigService,
   ) {
-    
+
   }
 
   private async initializeProducts(): Promise<void> {
@@ -28,8 +28,12 @@ export class ProductService {
     }
   }
 
-  async getAllProducts(){
-    await this.initializeProducts();
+  async getAllProducts(): Promise<ProductDTO[]>{
+    try {
+      this.allProducts = (await this.findAll()).data.data; // Example: Assuming getProducts() returns a Promise<ProductDTO[]>
+    } catch (error) {
+      console.error('Error initializing products:', error);
+    }
     return this.allProducts;
   }
 
