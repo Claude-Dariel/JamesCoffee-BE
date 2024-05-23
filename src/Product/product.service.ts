@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosError } from 'axios';
-import { catchError, firstValueFrom, take } from 'rxjs';
+import { catchError, firstValueFrom, lastValueFrom, take } from 'rxjs';
 import { ProductDTO } from './Product.dto';
 import { ConfigService } from '@nestjs/config';
 
@@ -40,7 +40,7 @@ export class ProductService {
   async findAll() {
     console.log(`${this.url}/${this.catalogId}/products?${this.parameters}`);
     this.logger.debug('findAll');
-    return await firstValueFrom(
+    return await lastValueFrom(
       this.httpService
         .get(`${this.url}/${this.catalogId}/products?${this.parameters}`)
         .pipe(
