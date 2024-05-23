@@ -30,7 +30,9 @@ export class ProductService {
 
   async getAllProducts(): Promise<ProductDTO[]>{
     try {
-      this.allProducts = (await this.findAll()).data.data; // Example: Assuming getProducts() returns a Promise<ProductDTO[]>
+      if(this.allProducts.length === 0){
+        this.allProducts = (await this.findAll()).data.data; // Example: Assuming getProducts() returns a Promise<ProductDTO[]>
+      }
     } catch (error) {
       console.error('Error initializing products:', error);
     }
